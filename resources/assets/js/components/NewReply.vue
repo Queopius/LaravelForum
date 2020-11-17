@@ -59,7 +59,7 @@
 
                         this.completed = true;
                         flash('Your reply has been posted.');
-                    });
+                    })
                     .finally(() => {
                         this.completed = false
                     });

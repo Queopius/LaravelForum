@@ -6,16 +6,17 @@
             :value="value">
 
         <trix-editor 
-            ref="trix" 
-            input="trix" 
+            ref="trix"
+            input="trix"
             :placeholder="placeholder"
+            class="form-control"
             style="height: auto"
         ></trix-editor>
     </div>
 </template>
 
 <script>
-    import Trix from 'trix';
+    import Trix from "trix";
 
     export default {
         props: ['name', 'value', 'placeholder', 'shouldClear'],
@@ -29,5 +30,5 @@
                 this.$refs.trix.value = '';
             });
         }
-    };
+    }
 </script>

@@ -31,7 +31,6 @@
     </div>
 </div>
 
-
 {{-- Viewing the question. --}}
 <div class="card border-0 shadow-sm mt-3 mb-3" v-else>
     <div class="card-header bg-white">

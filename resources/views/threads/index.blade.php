@@ -4,16 +4,17 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-md-8">
-                @include ('threads._list')
+
+                @include('threads._list')
 
                 {{ $threads->render() }}
             </div>
 
             <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-header bg-white">
+                <div class="card border-0 shadow-sm mb-3">
+                    {{-- <div class="card-header bg-white">
                         Search
-                    </div>
+                    </div> --}}
 
                     <div class="card-body">
                         <form method="GET" action="/threads/search">
@@ -33,22 +34,21 @@
                 </div>
 
                 @if (count($trending))
-                    <div class="card">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white">
                             Trending Threads
                         </div>
 
-                        <div class="card-body">
-                            <ul class="list-group">
-                                @foreach ($trending as $thread)
-                                    <li class="list-group-item">
-                                        <a href="{{ url($thread->path) }}">
-                                            {{ $thread->title }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                        @foreach ($trending as $thread)
+                            
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="{{ url($thread->path) }}" style="text-decoration:none;">
+                                        {{ $thread->title }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 @endif
             </div>

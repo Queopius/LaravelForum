@@ -6,13 +6,13 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center mt-4">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="row">
                     <div class="col-md-12">
 
-                        <div class="card-title">
+                        <div class="card-header bg-white">
                             <h3>
                                 Create a New Thread
                             </h3>
@@ -82,3 +82,7 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+
+@endpush

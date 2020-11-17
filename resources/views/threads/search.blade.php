@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="card">
+                    <div class="card bottom-0 shadow-sm">
                         <div class="card-header">
                             Search
                         </div>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-header">
                             Filter By Channel
                         </div>
@@ -45,7 +45,7 @@
                     </div>
 
                     @if (count($trending))
-                        <div class="card">
+                        <div class="card border-0 shadow-sm">
                             <div class="card-header">
                                 Trending Threads
                             </div>
