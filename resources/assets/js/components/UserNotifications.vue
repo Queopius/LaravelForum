@@ -31,5 +31,5 @@
                 axios.delete('/profiles/' + window.App.user.name + '/notifications/' + notification.id)
             }
         }
-    }
+    };
 </script>

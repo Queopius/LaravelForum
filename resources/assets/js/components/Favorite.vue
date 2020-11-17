@@ -48,5 +48,5 @@
                 this.count--;
             }
         }
-    }
+    };
 </script>

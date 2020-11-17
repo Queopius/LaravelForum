@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
-    <link rel="stylesheet" href="/css/vendor/jquery.atwho.css">
+    <link rel="stylesheet" href="{{ asset('/css/vendor/jquery.atwho.css') }}">
 @endsection
 
 @section('content')

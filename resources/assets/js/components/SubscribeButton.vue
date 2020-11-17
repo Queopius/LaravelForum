@@ -21,5 +21,5 @@
                 this.active = ! this.active;
             }
         }
-    }
+    };
 </script>

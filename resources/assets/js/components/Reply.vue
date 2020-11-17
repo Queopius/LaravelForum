@@ -97,5 +97,5 @@
                 window.events.$emit('best-reply-selected', this.id);
             }
         }
-    }
+    };
 </script>

@@ -52,5 +52,5 @@
                 history.pushState(null, null, '?page=' + this.page);
             }
         }
-    }
+    };
 </script>

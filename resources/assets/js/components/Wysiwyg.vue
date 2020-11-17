@@ -2,7 +2,12 @@
     <div>
         <input id="trix" type="hidden" :name="name" :value="value">
 
-        <trix-editor ref="trix" input="trix" :placeholder="placeholder"></trix-editor>
+        <trix-editor 
+            ref="trix" 
+            input="trix" 
+            :placeholder="placeholder"
+            style="height: auto"
+        ></trix-editor>
     </div>
 </template>
 
@@ -21,5 +26,5 @@
                 this.$refs.trix.value = '';
             });
         }
-    }
+    };
 </script>

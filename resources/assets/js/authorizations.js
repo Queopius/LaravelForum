@@ -1,4 +1,4 @@
-let user = window.App.user;
+let user = window.app.user;
 
 module.exports = {
     owns (model, prop = 'user_id') {

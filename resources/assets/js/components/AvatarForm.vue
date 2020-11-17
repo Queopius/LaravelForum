@@ -49,5 +49,5 @@
                     .then(() => flash('Avatar uploaded!'));
             }
         }
-    }
+    };
 </script>
