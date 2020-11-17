@@ -10,25 +10,28 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+Route::get('/home', 'HomeController@index')->name('home');
+
+// Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+// Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+// Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 /**
  * Routes Thread
  */
 Route::get('threads', 'ThreadsController@index')->name('threads');
-Route::get('threads/create', 'ThreadsController@create');
+Route::get('threads/create', 'ThreadsController@create')->name('threads.create');
 Route::get('threads/search', 'SearchController@show');
-Route::get('threads/{channel}/{thread}', 'ThreadsController@show');
+Route::get('threads/{channel}/{thread}', 'ThreadsController@show')->name('threads.show');
 Route::patch('threads/{channel}/{thread}', 'ThreadsController@update');
-Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy');
-Route::post('threads', 'ThreadsController@store')->middleware('must-be-confirmed');
+Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')->name('threads.destroy')->middleware('auth');
+Route::post('threads', 'ThreadsController@store')->name('threads.store')->middleware('must-be-confirmed');
 Route::get('threads/{channel}', 'ThreadsController@index');
 
 /**
@@ -41,7 +44,7 @@ Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')->nam
  * Routes Reply
  */
 Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
-Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
+Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store')->name('replies.store');
 Route::patch('/replies/{reply}', 'RepliesController@update');
 Route::delete('/replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 
@@ -77,6 +80,3 @@ Route::get('/register/confirm', 'Auth\RegisterConfirmationController@index')->na
 Route::get('api/users', 'Api\UsersController@index');
 Route::post('api/users/{user}/avatar', 'Api\UserAvatarController@store')->middleware('auth')->name('avatar');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

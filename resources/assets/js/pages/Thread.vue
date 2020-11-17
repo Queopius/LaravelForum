@@ -39,8 +39,8 @@
             },
             resetForm () {
                 this.form = {
-                    title: this.thread.title,
-                    body: this.thread.body
+                    title: this.title,
+                    body: this.body
                 };
 
                 this.editing = false;

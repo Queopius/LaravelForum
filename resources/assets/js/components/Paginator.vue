@@ -1,14 +1,10 @@
 <template>
-    <ul class="pagination" v-if="shouldPaginate">
-        <li v-show="prevUrl">
-            <a href="#" aria-label="Previous" rel="prev" @click.prevent="page--">
-                <span aria-hidden="true">&laquo; Previous</span>
-            </a>
+   <ul class="pagination" v-if="shouldPaginate">
+        <li class="page-item" v-if="prevUrl" @click.prevent="page--">
+            <a class="page-link" href="#" rel="prev">Previous</a>
         </li>
-        <li v-show="nextUrl">
-            <a href="#" aria-label="Next" rel="next" @click.prevent="page++">
-                <span aria-hidden="true">Next &raquo;</span>
-            </a>
+        <li class="page-item" v-if="nextUrl" @click.prevent="page++">
+            <a class="page-link" href="#">Next</a>
         </li>
     </ul>
 </template>
@@ -20,9 +16,9 @@
         data() {
             return {
                 page: 1,
-                prevUrl: false,
-                nextUrl: false
-            }
+                prevUrl: null,
+                nextUrl: null,
+            };
         },
 
         watch: {

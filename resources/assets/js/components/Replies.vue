@@ -15,17 +15,16 @@
 </template>
 
 <script>
-    import Reply from './Reply.vue';
-    import NewReply from './NewReply.vue';
+    import Reply from './Reply';
+    import NewReply from './NewReply';
     import collection from '../mixins/collection';
 
     export default {
         components: { Reply, NewReply },
-
         mixins: [collection],
 
         data() {
-            return { dataSet: false };
+            return { dataSet: null };
         },
 
         created() {
@@ -36,23 +35,41 @@
             fetch(page) {
                 axios.get(this.url(page)).then(this.refresh);
             },
-
-            url(page) {
-                if (! page) {
-                    let query = location.search.match(/page=(\d+)/);
-
-                    page = query ? query[1] : 1;
-                }
-
-                return `${location.pathname}/replies?page=${page}`;
-            },
-
             refresh({data}) {
                 this.dataSet = data;
                 this.items = data.data;
-
                 window.scrollTo(0, 0);
-            }
+            },
+            url(page) {
+                if (! page) {
+                    let query = location.search.match(/page=(\d+)/);
+                    page = query ? query[1] : 1;
+                }
+                return `${location.pathname}/replies?page=${page}`;
+            },
         }
-    }
+
+        // methods: {
+        //     fetch(page) {
+        //         axios.get(this.url(page)).then(this.refresh);
+        //     },
+
+        //     url(page) {
+        //         if (! page) {
+        //             let query = location.search.match(/page=(\d+)/);
+
+        //             page = query ? query[1] : 1;
+        //         }
+
+        //         return `${location.pathname}/replies?page=${page}`;
+        //     },
+
+        //     refresh({data}) {
+        //         this.dataSet = data;
+        //         this.items = data.data;
+
+        //         window.scrollTo(0, 0);
+        //     }
+        // }
+    };
 </script>

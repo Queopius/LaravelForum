@@ -1,6 +1,6 @@
 @forelse ($threads as $thread)
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white">
             <div class="level">
                 <div class="flex">
                     <h4>
@@ -26,11 +26,11 @@
             </div>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="body">{!! $thread->body !!}</div>
         </div>
 
-        <div class="panel-footer">
+        <div class="card-footer bg-white">
             {{ $thread->visits }} Visits
         </div>
     </div>

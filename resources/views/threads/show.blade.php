@@ -7,16 +7,16 @@
 @section('content')
     <thread-view :thread="{{ $thread }}" inline-template>
         <div class="container">
-            <div class="row">
-                <div class="col-md-8" v-cloak>
+            <div class="row mt-4">
+                <div class="col-md-8" v-click>
                     @include ('threads._question')
 
                     <replies @added="repliesCount++" @removed="repliesCount--"></replies>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
                             <p>
                                 This thread was published {{ $thread->created_at->diffForHumans() }} by
                                 <a href="#">{{ $thread->creator->name }}</a>, and currently
@@ -28,7 +28,7 @@
                             <p>
                                 <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}" v-if="signedIn"></subscribe-button>
 
-                                <button class="btn btn-default"
+                                <button class="btn btn-primary"
                                         v-if="authorize('isAdmin')"
                                         @click="toggleLock"
                                         v-text="locked ? 'Unlock' : 'Lock'"></button>

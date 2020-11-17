@@ -14,25 +14,21 @@
 </template>
 
 <script>
-    import ImageUpload from './ImageUpload.vue';
+    import ImageUpload from './ImageUpload';
 
     export default {
         props: ['user'],
-
         components: { ImageUpload },
-
         data() {
             return {
                 avatar: this.user.avatar_path
             };
         },
-
         computed: {
             canUpdate() {
                 return this.authorize(user => user.id === this.user.id);
             }
         },
-
         methods: {
             onLoad(avatar) {
                 this.avatar = avatar.src;

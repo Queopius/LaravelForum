@@ -2,11 +2,15 @@
     <div>
         <div v-if="signedIn">
             <div class="form-group">
-                <wysiwyg name="body" v-model="body" placeholder="Have something to say?" :shouldClear="completed"></wysiwyg>
+                <wysiwyg
+                    placeholder="Have something to say?" 
+                    v-model="body" 
+                    :shouldClear="completed"
+                ></wysiwyg>
             </div>
 
             <button type="submit"
-                    class="btn btn-default"
+                    class="btn btn-primary"
                     @click="addReply">Post</button>
         </div>
 
@@ -51,11 +55,13 @@
                     })
                     .then(({data}) => {
                         this.body = '';
-                        this.completed = true;
-
-                        flash('Your reply has been posted.');
-
                         this.$emit('created', data);
+
+                        this.completed = true;
+                        flash('Your reply has been posted.');
+                    });
+                    .finally(() => {
+                        this.completed = false
                     });
             }
         }

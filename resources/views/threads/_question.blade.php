@@ -1,22 +1,22 @@
 {{-- Editing the question. --}}
-<div class="panel panel-default" v-if="editing">
-    <div class="panel-heading">
+<div class="card border-0 shadow-sm" v-if="editing">
+    <div class="card-header bg-white">
         <div class="level">
             <input type="text" class="form-control" v-model="form.title">
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
         <div class="form-group">
             <wysiwyg v-model="form.body"></wysiwyg>
         </div>
     </div>
 
-    <div class="panel-footer">
+    <div class="card-footer bg-white">
         <div class="level">
-            <button class="btn btn-xs level-item" @click="editing = true" v-show="! editing">Edit</button>
-            <button class="btn btn-primary btn-xs level-item" @click="update">Update</button>
-            <button class="btn btn-xs level-item" @click="resetForm">Cancel</button>
+            <button class="btn btn-sm level-item" @click="editing = true" v-show="! editing">Edit</button>
+            <button class="btn btn-primary btn-sm level-item" @click="update">Update</button>
+            <button class="btn btn-sm level-item" @click="resetForm">Cancel</button>
 
             @can ('update', $thread)
                 <form action="{{ $thread->path() }}" method="POST" class="ml-a">
@@ -33,8 +33,8 @@
 
 
 {{-- Viewing the question. --}}
-<div class="panel panel-default" v-else>
-    <div class="panel-heading">
+<div class="card border-0 shadow-sm mt-3 mb-3" v-else>
+    <div class="card-header bg-white">
         <div class="level">
             <img src="{{ $thread->creator->avatar_path }}"
                  alt="{{ $thread->creator->name }}"
@@ -48,9 +48,9 @@
         </div>
     </div>
 
-    <div class="panel-body" v-html="body"></div>
+    <div class="card-body" v-html="body"></div>
 
-    <div class="panel-footer" v-if="authorize('owns', thread)">
-        <button class="btn btn-xs" @click="editing = true">Edit</button>
+    <div class="card-footer bg-white" v-if="authorize('owns', thread)">
+        <button class="btn btn-sm" @click="editing = true">Edit</button>
     </div>
 </div>
