@@ -23,6 +23,8 @@ abstract class TestCase extends BaseTestCase
 
         $this->addTestResponseMacros();
         
+        //$this->disableExceptionHandling();
+
         //$this->withoutExceptionHandling();
 
         $this->enableQueryLog();
@@ -62,18 +64,18 @@ abstract class TestCase extends BaseTestCase
     }
 
     // Hat tip, @adamwathan.
-    protected function disableExceptionHandling()
-    {
-        $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
+    // protected function disableExceptionHandling()
+    // {
+    //     $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
 
-        $this->app->instance(ExceptionHandler::class, new class extends Handler {
-            public function __construct() {}
-            public function report(\Throwable $e) {}
-            public function render($request, \Throwable $e) {
-                throw $e;
-            }
-        });
-    }
+    //     $this->app->instance(ExceptionHandler::class, new class extends Handler {
+    //         public function __construct() {}
+    //         public function report(\Throwable $e) {}
+    //         public function render($request, \Throwable $e) {
+    //             throw $e;
+    //         }
+    //     });
+    // }
 
     /**
      * Set the currently logged in user for the application.

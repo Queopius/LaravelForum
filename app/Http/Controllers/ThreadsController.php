@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\SpamFree;
 use App\Rules\Recaptcha;
+use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
 use App\Models\{Channel, Thread, Trending};
 
@@ -39,6 +41,24 @@ class ThreadsController extends Controller
     }
 
     /**
+     * Fetch all relevant threads.
+     *
+     * @param Channel       $channel
+     * @param ThreadFilters $filters
+     * @return mixed
+     */
+    protected function getThreads(Channel $channel, ThreadFilters $filters)
+    {
+        $threads = Thread::latest()->filter($filters);
+
+        if ($channel->exists) {
+            $threads->where('channel_id', $channel->id);
+        }
+
+        return $threads->latest()->paginate(25);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -54,20 +74,20 @@ class ThreadsController extends Controller
      * @param  \App\Rules\Recaptcha $recaptcha
      * @return \Illuminate\Http\Response
      */
-    public function store(Recaptcha $recaptcha)
+    public function store(Request $request, Recaptcha $recaptcha)
     {
-        request()->validate([
-            'title' => 'required|spamfree',
-            'body' => 'required|spamfree',
+        $request->validate([
+            'title' => ['required', new SpamFree],
+            'body' => ['required', new SpamFree],
             'channel_id' => 'required|exists:channels,id',
             'g-recaptcha-response' => ['required', $recaptcha]
         ]);
 
         $thread = Thread::create([
             'user_id' => auth()->id(),
-            'channel_id' => request('channel_id'),
-            'title' => request('title'),
-            'body' => request('body')
+            'channel_id' => $request->channel_id,
+            'title' => $request->title,
+            'body' => $request->body
         ]);
 
         if (request()->wantsJson()) {
@@ -135,23 +155,5 @@ class ThreadsController extends Controller
         }
 
         return redirect('/threads');
-    }
-
-    /**
-     * Fetch all relevant threads.
-     *
-     * @param Channel       $channel
-     * @param ThreadFilters $filters
-     * @return mixed
-     */
-    protected function getThreads(Channel $channel, ThreadFilters $filters)
-    {
-        $threads = Thread::latest()->filter($filters);
-
-        if ($channel->exists) {
-            $threads->where('channel_id', $channel->id);
-        }
-
-        return $threads->paginate(25);
-    }
+    }    
 }

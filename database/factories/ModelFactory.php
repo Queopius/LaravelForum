@@ -11,18 +11,19 @@ $factory->define(User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'email_verified_at' => now(),
         'password' => $password ?: $password = 'secret',
         'remember_token' => Str::random(10),
-        'confirmed' => true
+        // 'confirmed' => true
     ];
 });
 
 
-$factory->state(User::class, 'unconfirmed', function () {
-    return [
-        'confirmed' => false
-    ];
-});
+// $factory->state(User::class, 'unconfirmed', function () {
+//     return [
+//         'confirmed' => false
+//     ];
+// });
 
 $factory->state(User::class, 'administrator', function () {
     return [

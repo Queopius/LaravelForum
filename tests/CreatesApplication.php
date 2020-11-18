@@ -19,7 +19,7 @@ trait CreatesApplication
         $app->make(Kernel::class)->bootstrap();
 
         // set the bcrypt hashing rounds...
-        Hash::setRounds(5);
+        Hash::setRounds(4);
 
         return $app;
     }
