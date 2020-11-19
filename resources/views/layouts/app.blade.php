@@ -14,6 +14,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.3/trix.min.css" integrity="sha512-sC2S9lQxuqpjeJeom8VeDu/jUJrVfJM7pJJVuH9bqrZZYqGe7VhTASUb3doXVk6WtjD0O4DTS+xBx2Zpr1vRvg==" crossorigin="anonymous" />
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <style>
+        .level {
+            display: flex;
+            align-items: center;
+        }
+
+        .flex {
+            flex: 1;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .ml-a {
+            margin-left: auto;
+        }
+
+        .ais-highlight > em {
+            background: yellow;
+            font-style: normal;
+        }
+    </style>
+    <script>
+        window.app = {!! json_encode([
+            'signedIn' => auth()->check(),
+            'user' => auth()->user(),
+        ]) !!}
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/trix/0.11.1/trix.css" rel="stylesheet">
     
     @stack('styles')
 </head>
@@ -23,9 +55,13 @@
         @include('layouts.nav')
 
         @yield('content')
+
+        <flash message="{{ session('flash') }}"></flash>
     </div>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+
+    @stack('scripts')
 </body>
 </html>

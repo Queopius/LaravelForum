@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section ('head')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    
 @endsection
 
 @section('content')
@@ -93,6 +93,7 @@
 @endpush
 
 @push('scripts')
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <script type="text/javascript">
   var onloadCallback = function() {
     alert("grecaptcha is ready!");
