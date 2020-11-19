@@ -2,14 +2,17 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="page-header">
-                    <avatar-form :user="{{ $profileUser }}"></avatar-form>
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card -mb-3">
+                    <div class="card-body">
+                        Since {{ $profileUser->created_at->diffForHumans() }}
+                        <avatar-form :user="{{ $profileUser }}"></avatar-form>
+                    </div>
                 </div>
 
                 @forelse ($activities as $date => $activity)
-                    <h3 class="page-header">{{ $date }}</h3>
+                    <h3>{{ $date }}</h3>
 
                     @foreach ($activity as $record)
                         @if (view()->exists("profiles.activities.{$record->type}"))

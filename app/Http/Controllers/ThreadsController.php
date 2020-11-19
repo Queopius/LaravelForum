@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\SpamFree;
 use App\Rules\Recaptcha;
 use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
@@ -77,8 +76,8 @@ class ThreadsController extends Controller
     public function store(Request $request, Recaptcha $recaptcha)
     {
         $request->validate([
-            'title' => ['required', new SpamFree],
-            'body' => ['required', new SpamFree],
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
             'channel_id' => 'required|exists:channels,id',
             'g-recaptcha-response' => ['required', $recaptcha]
         ]);

@@ -7,7 +7,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center mt-4">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="card border-0 shadow-sm">
                 <div class="row">
                     <div class="col-md-12">
@@ -58,11 +58,16 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="g-recaptcha" data-sitekey="6LeXrDUUAAAAAFco7ShbMrJx0fh-ZrLxK9Amd-zP"></div>
+                                    <div class="g-recaptcha" 
+                                        data-callback='onSubmit' 
+                                        data-action='submit'
+                                        data-sitekey="6LerLeUZAAAAADhrG5ekGxP6XPUHZAUc4Bqcwicj"></div>
                                 </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Publish</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Publish
+                                    </button>
                                 </div>
 
                                 @if (count($errors))
@@ -85,4 +90,12 @@
 
 @push('styles')
 
+@endpush
+
+@push('scripts')
+<script type="text/javascript">
+  var onloadCallback = function() {
+    alert("grecaptcha is ready!");
+  };
+</script>
 @endpush

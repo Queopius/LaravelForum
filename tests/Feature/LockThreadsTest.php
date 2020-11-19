@@ -21,7 +21,7 @@ class LockThreadsTest extends TestCase
         $this->post(route('locked-threads.store', $thread))->assertStatus(403);
 
         $this->assertFalse($thread->fresh()->locked);
-    }
+    } 
 
     /** @test */
     function administrators_can_lock_threads()

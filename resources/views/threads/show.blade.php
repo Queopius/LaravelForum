@@ -8,7 +8,7 @@
     <thread-view :thread="{{ $thread }}" inline-template>
         <div class="container">
             <div class="row mt-4">
-                <div class="col-md-8" v-click>
+                <div class="col-md-8" v-cloak>
                     @include ('threads._question')
 
                     <replies @added="repliesCount++" @removed="repliesCount--"></replies>
@@ -20,13 +20,15 @@
                             <p>
                                 This thread was published {{ $thread->created_at->diffForHumans() }} by
                                 <a href="#">{{ $thread->creator->name }}</a>, and currently
-                                has <span
-                                        v-text="repliesCount"></span> {{ \Illuminate\Support\Str::plural('comment', $thread->replies_count) }}
+                                has 
+                                <span v-text="repliesCount"></span> {{ \Illuminate\Support\Str::plural('comment', $thread->replies_count) }}
                                 .
                             </p>
 
                             <p>
-                                <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}" v-if="signedIn"></subscribe-button>
+                                <subscribe-button :active="@json($thread->isSubscribedTo)" v-if="signedIn"></subscribe-button>
+                                
+                                {{-- <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}" v-if="signedIn"></subscribe-button> --}}
 
                                 <button class="btn btn-primary"
                                         v-if="authorize('isAdmin')"

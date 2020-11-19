@@ -7,7 +7,7 @@
 
                 @include('threads._list')
 
-                {{ $threads->render() }}
+                {{ $threads->links() }}
             </div>
 
             <div class="col-md-4">

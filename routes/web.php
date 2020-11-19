@@ -1,15 +1,7 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use Illuminate\Support\Facades\Route;
+
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
@@ -17,66 +9,87 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-// Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-// Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-// Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
-
+/**
+ * Reoute Thread Searach
+ */
+Route::get('threads/search', 'SearchController@show');
 /**
  * Routes Thread
  */
-Route::get('threads', 'ThreadsController@index')->name('threads');
-Route::get('threads/create', 'ThreadsController@create')->name('threads.create');
-Route::get('threads/search', 'SearchController@show');
-Route::get('threads/{channel}/{thread}', 'ThreadsController@show')->name('threads.show');
-Route::patch('threads/{channel}/{thread}', 'ThreadsController@update');
-Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')->name('threads.destroy')->middleware('auth');
-Route::post('threads', 'ThreadsController@store')->name('threads.store')->middleware('must-be-confirmed');
-Route::get('threads/{channel}', 'ThreadsController@index');
+Route::group(['prefix' => 'threads'], function () {
+	Route::get('', 'ThreadsController@index')->name('threads');
+	Route::name('threads.')->group(function () {
+		Route::resource('', 'ThreadsController')
+			->parameters(['' => 'thread'])
+			->only(['create', 'edit'])
+			->middleware('auth');
 
-/**
- * Routes Locked Thread
- */
-Route::post('locked-threads/{thread}', 'LockedThreadsController@store')->name('locked-threads.store')->middleware('admin');
-Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')->name('locked-threads.destroy')->middleware('admin');
+        Route::get('{channel}/{thread}', 'ThreadsController@show')
+        	->name('show');
+
+        Route::post('', 'ThreadsController@store')
+        	->name('store')
+        	->middleware(['verified', 'auth']);
+
+        Route::delete('{channel}/{thread}', 'ThreadsController@destroy')
+        	->name('destroy')
+        	->middleware('auth');
+
+        Route::patch('{channel}/{thread}', 'ThreadsController@update');
+	});
+
+	/**
+	 * Routes Thread Subscripions
+	 */
+	Route::post('{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')
+		->middleware('auth');
+	Route::delete('{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')
+		->middleware('auth');
+	/**
+	 * Routes Reply
+	 */
+	Route::get('{channel}/{thread}/replies', 'RepliesController@index');
+	Route::post('{channel}/{thread}/replies', 'RepliesController@store')
+		->name('replies.store');
+	Route::get('{channel}', 'ThreadsController@index')
+		->name('thread.index');
+});
 
 /**
  * Routes Reply
  */
-Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
-Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store')->name('replies.store');
-Route::patch('/replies/{reply}', 'RepliesController@update');
-Route::delete('/replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
-
-Route::post('/replies/{reply}/best', 'BestRepliesController@store')->name('best-replies.store');
-
-/**
- * Routes Thread Subscripions
- */
-Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')->middleware('auth');
-Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')->middleware('auth');
-
-/**
- * Routes Favorites
- */
-Route::post('/replies/{reply}/favorites', 'FavoritesController@store');
-Route::delete('/replies/{reply}/favorites', 'FavoritesController@destroy');
-
+Route::group(['middleware' => 'auth', 'prefix' => 'replies/{reply}'], function () {
+	Route::post('/favorites', 'FavoritesController@store');
+	Route::delete('/favorites', 'FavoritesController@destroy');
+	Route::post('/best', 'BestRepliesController@store')
+		->name('best-replies.store');
+	Route::delete('', 'RepliesController@destroy')
+		->name('replies.destroy');
+	Route::patch('', 'RepliesController@update');
+});
 /**
  * Routes Profiles
  */
-Route::get('/profiles/{user}', 'ProfilesController@show')->name('profile');
-Route::get('/profiles/{user}/notifications', 'UserNotificationsController@index');
-Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy');
-
-/**
- * Routes Registration
- */
-Route::get('/register/confirm', 'Auth\RegisterConfirmationController@index')->name('register.confirm');
-
+Route::group(['prefix' => 'profiles/{user}'], function () {
+	Route::get('', 'ProfilesController@show')
+		->name('profile');
+	Route::get('{user}/notifications', 'UserNotificationsController@index');
+	Route::delete('{user}/notifications/{notification}', 'UserNotificationsController@destroy')
+		->middleware('auth');
+});
 /**
  * Routes Api Users
  */
 Route::get('api/users', 'Api\UsersController@index');
-Route::post('api/users/{user}/avatar', 'Api\UserAvatarController@store')->middleware('auth')->name('avatar');
-
+Route::post('api/users/{user}/avatars', 'Api\UserAvatarController@store')
+	->middleware('auth')
+	->name('avatars');
+/**
+ * Routes Locked Thread
+ */
+Route::post('locked-threads/{thread}', 'LockedThreadsController@store')
+	->name('locked-threads.store')
+	->middleware('admin');
+Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')
+	->name('locked-threads.destroy')
+	->middleware('admin');

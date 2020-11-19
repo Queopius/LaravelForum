@@ -6,19 +6,18 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AddAvatarTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     function only_members_can_add_avatars()
     {      
         $user = create(User::class);
 
         $this->json('POST', 'api/users/'.$user->id.'/avatars')
-            ->assertStatus(404);
+            ->assertRedirect('login');
     }
 
     /** @test */
@@ -38,8 +37,8 @@ class AddAvatarTest extends TestCase
 
         Storage::fake('public');
 
-        $this->json('POST', 'api/users/' . auth()->id() . '/avatar', [
-            'avatar' => $file = UploadedFile::fake()->image('avatar.jpg')
+        $this->json('POST', 'api/users/' . auth()->id() . '/avatars', [
+            'avatar' => $file = UploadedFile::fake()->image('avatars.jpg')
         ]);
 
         $this->assertEquals(asset('avatars/'.$file->hashName()), auth()->user()->avatar_path);

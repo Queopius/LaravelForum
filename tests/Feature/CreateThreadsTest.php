@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Rules\Recaptcha;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Models\{User, Thread, Channel, Activity, Reply};
 
 class CreateThreadsTest extends TestCase
@@ -34,29 +33,37 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
-        $user = create(User::class, ['email_verified_at' => null]);
+        $this->publishThread([], create(User::class, ['email_verified_at' => null]))
+            ->assertRedirect('email/verify');
+            
+        // $user = create(User::class, ['email_verified_at' => null]);
 
-        $this->signIn($user)
-            ->post(route('threads'), make(Thread::class)->toArray())
-            ->assertRedirect(route('threads'))
-            ->assertSessionHas('flash', 'You must first confirm your email address.');
+        // $this->signIn($user)
+        //     ->post(route('threads'), make(Thread::class)->toArray())
+        //     ->assertRedirect(route('threads'))
+        //     ->assertSessionHas('flash', 'You must first confirm your email address.');
     }
 
     /** @test */
     function a_authenticated_user_can_create_a_thread()
     {
-        $response = $this->publishThread(['title', 'body']);
-
-        $this->get($response->headers->get('Location'))
+        $this
+            ->followingRedirects()
+            ->publishThread(['title' => 'title', 'body' => 'body'])
             ->assertSee('title')
             ->assertSee('body');
+        // $response = $this->publishThread(['title', 'body']);
+
+        // $this->get($response->headers->get('Location'))
+        //     ->assertSee('title')
+        //     ->assertSee('body');
     }
 
     /** @test */
     function a_thread_requires_a_title()
     {
-        $this->publishThread(['title' => ''])
-            ->assertRedirect('threads');
+        $this->publishThread(['title' => null])
+            ->assertSessionHasErrors('title');
 
         // $this->publishThread(['title' => ''])
         //     ->assertRedirect('threads')
@@ -67,7 +74,7 @@ class CreateThreadsTest extends TestCase
     function a_thread_requires_a_body()
     {
         $this->publishThread(['body' => ''])
-            ->assertRedirect('threads');
+            ->assertRedirect('');
     }
 
     /** @test */
@@ -76,7 +83,7 @@ class CreateThreadsTest extends TestCase
         unset(app()[Recaptcha::class]);
 
         $this->publishThread(['g-recaptcha-response' => 'test'])
-            ->assertRedirect('threads');
+            ->assertRedirect('');
     }
 
     /** @test */
@@ -85,25 +92,38 @@ class CreateThreadsTest extends TestCase
         factory(Channel::class, 2)->create();
 
         $this->publishThread(['channel_id' => null])
-            ->assertRedirect('threads');
+            ->assertRedirect('');
 
         $this->publishThread(['channel_id' => 999])
-            ->assertRedirect('threads');
+            ->assertRedirect('');
     }
 
     /** @test */
     function a_thread_requires_a_unique_slug()
     {
-        $this->actingAsUser();
+                $this->withoutExceptionHandling();
+
+
+        $this->signIn();
 
         $thread = create(Thread::class, ['title' => 'Foo Title']);
 
         $this->assertEquals($thread->slug, 'foo-title');
 
-        $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token'])->json();
-
+        $thread = $this->postJson(route('threads'), $thread->toArray()  + ['g-recaptcha-response' => 'token'])->json();
 
         $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+
+        // $this->actingAsUser();
+
+        // $thread = create(Thread::class, ['title' => 'Foo Title']);
+
+        // $this->assertEquals($thread->slug, 'foo-title');
+
+        // $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token'])->json();
+
+
+        // $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
         // dd($this->response->getContent());
     }
 

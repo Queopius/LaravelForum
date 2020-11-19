@@ -20,10 +20,10 @@
                     </a>
                 </h6>
                 <h6>
-                    Created at: {{ $thread->created_at->format('d/m/Y') }}
+                    Created to: {{ $thread->created_at->diffForHumans() }}
                 </h6>
-{{-- 
-                <a href="{{ $thread->path() }}" style="text-decoration:none;">
+
+                {{-- <a href="{{ $thread->path() }}" style="text-decoration:none;">
                     {{ $thread->replies_count }} {{ \Illuminate\Support\Str::plural('reply', $thread->replies_count) }}
                 </a> --}}
             </div>

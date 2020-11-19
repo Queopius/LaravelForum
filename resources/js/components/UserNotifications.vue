@@ -6,9 +6,9 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-            v-pre
+            v-pre>
             <i class="fa fa-bell"></i>
-        </a>
+        </a> 
 
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" 
@@ -28,13 +28,13 @@
         },
 
         created() {
-            axios.get('/profiles/' + window.App.user.name + '/notifications')
+            axios.get('/profiles/' + window.app.user.name + '/notifications')
                 .then(response => this.notifications = response.data);
         },
 
         methods: {
             markAsRead(notification) {
-                axios.delete('/profiles/' + window.App.user.name + '/notifications/' + notification.id)
+                axios.delete('/profiles/' + window.app.user.name + '/notifications/' + notification.id)
             }
         }
     };
