@@ -34,7 +34,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_filter_threads_according_to_a_channel()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $channel = create(Channel::class);
         $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
@@ -48,7 +48,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_filter_threads_by_any_username()
     {
-         //$this->withoutExceptionHandling();
+         $this->withoutExceptionHandling();
 
         $this->signIn(create(User::class, ['name' => 'JohnDoe']));
 
@@ -63,7 +63,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_filter_threads_by_popularity()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $threadWithTwoReplies = create(Thread::class);
         create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
@@ -81,7 +81,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_filter_threads_by_those_that_are_unanswered()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $thread = create(Thread::class);
         create(Reply::class, ['thread_id' => $thread->id]);
@@ -94,7 +94,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_request_all_replies_for_a_given_thread()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $thread = create(Thread::class);
         create(Reply::class, ['thread_id' => $thread->id], 2);
