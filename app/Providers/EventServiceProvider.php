@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\ThreadReceivedNewReply;
 use Illuminate\Auth\Events\Registered;
+use App\Listeners\{NotifyMentionedUsers, NotifyThreadSubscribers};
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -14,8 +16,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-            Registered::class => [
+        Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        ThreadReceivedNewReply::class => [
+            NotifyMentionedUsers::class,
+            NotifyThreadSubscribers::class,
         ],
     ];
 

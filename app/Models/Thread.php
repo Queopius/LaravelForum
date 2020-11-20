@@ -106,11 +106,11 @@ class Thread extends Model
      * @param  array $reply
      * @return Model
      */
-    public function addReply($reply)
+    public function addReply(array $reply)
     {
         $reply = $this->replies()->create($reply);
 
-        event(new ThreadReceivedNewReply($reply));
+        event(new ThreadReceivedNewReply($this, $reply));
 
         return $reply;
     }
@@ -122,7 +122,7 @@ class Thread extends Model
      * @param  ThreadFilters $filters
      * @return Builder
      */
-    public function scopeFilter($query, ThreadFilters $filters)
+    public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
@@ -150,7 +150,7 @@ class Thread extends Model
     public function unsubscribe($userId = null)
     {
         $this->subscriptions()
-            ->where('user_id', $userId ?? auth()->id())
+            ->where(['user_id' => $user ?? auth()->id()])
             ->delete();
     }
 
@@ -174,6 +174,17 @@ class Thread extends Model
         return $this->subscriptions()
             ->where('user_id', auth()->id())
             ->exists();
+    }
+
+    /**
+     * @param array $reply
+     */
+    public function notifySubscribers($reply): void
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 
     /**

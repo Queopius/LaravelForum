@@ -19,11 +19,11 @@ class ThreadFilters extends Filters
      * @param  string $username
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function by($username)
+    protected function by(string $username)
     {
-        $user = User::where('name', $username)->firstOrFail();
+        $user = User::whereName($username)->firstOrFail();
 
-        return $this->builder->where('user_id', $user->id);
+        return $this->builder->whereUserId($user->id);
     }
 
     /**

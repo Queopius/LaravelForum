@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'confirmed' => 'boolean'
+        'email_verified_at' => 'datetime',
     ];
 
     public function setPasswordAttribute($password)
@@ -89,17 +89,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Mark the user's account as confirmed.
-     */
-    public function confirm()
-    {
-        $this->confirmed = true;
-        $this->confirmation_token = null;
-
-        $this->save();
-    }
-
-    /**
      * Determine if the user is an administrator.
      *
      * @return bool
@@ -113,6 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * Record that the user has read the given thread.
      *
      * @param Thread $thread
+     * @throws \Exception
      */
     public function read($thread)
     {
@@ -130,7 +120,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarPathAttribute($avatar)
     {
-        return asset($avatar ?: 'images/avatars/default.png');
+        return asset(\Storage::url($avatar ?: 'avatars/default.png'));
     }
 
     /**

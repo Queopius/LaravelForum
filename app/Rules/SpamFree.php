@@ -2,11 +2,21 @@
 
 namespace App\Rules;
 
-use Exception;
 use App\Inspections\Spam;
+use Illuminate\Contracts\Validation\Rule;
 
-class SpamFree
+class SpamFree Implements Rule 
 {
+    /**
+     * Create a new rule instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+    
     /**
      * Determine if the given attribute passes our spam validation.
      *
@@ -18,8 +28,18 @@ class SpamFree
     {
         try {
             return ! resolve(Spam::class)->detect($value);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return 'The :attribute contains spam.';
     }
 }

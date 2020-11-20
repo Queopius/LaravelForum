@@ -73,8 +73,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'replies/{reply}'], function (
 Route::group(['prefix' => 'profiles/{user}'], function () {
 	Route::get('', 'ProfilesController@show')
 		->name('profile');
-	Route::get('{user}/notifications', 'UserNotificationsController@index');
-	Route::delete('{user}/notifications/{notification}', 'UserNotificationsController@destroy')
+	Route::get('/notifications', 'UserNotificationsController@index');
+	Route::delete('/notifications/{notification}', 'UserNotificationsController@destroy')
 		->middleware('auth');
 });
 /**

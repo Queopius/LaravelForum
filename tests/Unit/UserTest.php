@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\{User, Reply};
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
@@ -29,10 +30,10 @@ class UserTest extends TestCase
         
         $user = create(User::class);
 
-        $this->assertEquals(asset('images/avatars/default.png'), $user->avatar_path);
+        $this->assertEquals(asset(Storage::url('avatars/default.png')), $user->avatar_path);
 
         $user->avatar_path = 'avatars/me.jpg';
 
-        $this->assertEquals(asset('avatars/me.jpg'), $user->avatar_path);
+        $this->assertEquals(asset(Storage::url('avatars/me.jpg')), $user->avatar_path);
     }
 }

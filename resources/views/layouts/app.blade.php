@@ -10,6 +10,8 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('/backend/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.3/trix.min.css" integrity="sha512-sC2S9lQxuqpjeJeom8VeDu/jUJrVfJM7pJJVuH9bqrZZYqGe7VhTASUb3doXVk6WtjD0O4DTS+xBx2Zpr1vRvg==" crossorigin="anonymous" />
     <!-- Styles -->
@@ -60,7 +62,14 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/v-tooltip"></script>
+
     <script src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" charset="utf-8" async defer>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip('enable')
+        })      
+    </script>
 
     @stack('scripts')
 </body>

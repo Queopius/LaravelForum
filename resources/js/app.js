@@ -9,9 +9,10 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import InstantSearch from 'vue-instantsearch';
-
+import VTooltip from 'v-tooltip'
+ 
 Vue.use(InstantSearch);
-
+Vue.use(VTooltip)
 
 let authorizations = require('./authorizations');
 

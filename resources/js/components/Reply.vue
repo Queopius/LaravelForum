@@ -1,6 +1,9 @@
 <template>
-    <div :id="'reply-'+id" class="card mb-2" :class="isBest ? 'border-success': 'card-default'">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div :id="'reply-'+id" 
+        class="card border-0 shadow-sm mt-3" 
+        :class="isBest ? 'border-success': 'card-default'"
+        >
+        <div class="card-header bg-white d-flex align-items-center">
 
             <div>
                 <a :href="'/profiles/' + reply.owner.name"
@@ -22,8 +25,15 @@
                             <wysiwyg v-model="body"></wysiwyg>
                         </div>
 
-                        <button class="btn btn-sm btn-primary">Update</button>
-                        <button class="btn btn-sm btn-link" @click="editing = false" type="button">Cancel</button>
+                        <button class="btn btn-sm btn-primary">
+                            Update
+                        </button>
+                        <button class="btn btn-sm btn-link" 
+                            @click="editing = false" 
+                            type="button"
+                            >
+                            Cancel
+                        </button>
                     </form>
                 </div>
             </div>
@@ -31,13 +41,26 @@
             <article v-html="body" v-else></article>
         </div>
 
-        <div class="card-footer d-flex justify-content-between" v-if="authorize('owns', reply) || authorize('owns', reply.thread)">
+        <div class="card-footer bg-white d-flex justify-content-between" v-if="authorize('owns', reply) || authorize('owns', reply.thread)">
             <div v-if="authorize('owns', reply)">
-                <button class="btn btn-sm btn-success mr-1" @click="editing = true" v-if="! editing">Edit</button>
-                <button class="btn btn-sm btn-danger mr-1" @click="destroy">Delete</button>
+                <button class="btn mr-1" 
+                    @click="editing = true" 
+                    v-if="! editing"
+                    >
+                    <i class="far fa-edit fa-lg"></i>
+                </button>
+                <button class="btn mr-1" 
+                    @click="destroy"
+                    >    
+                    <i class="far fa-trash-alt fa-lg text-danger"></i>
+                </button>
             </div>
 
-            <button class="btn btn-sm btn-primary ml-a" @click="markBestReply" v-if="authorize('owns', reply.thread)">Best Reply?</button>
+            <button class="btn btn-sm btn-primary ml-a" 
+                @click="markBestReply" 
+                v-if="authorize('owns', reply.thread)">
+                Best Reply?
+            </button>
         </div>
     </div>
 </template>
@@ -45,6 +68,7 @@
 <script>
     import Favorite from './Favorite';
     import moment from 'moment';
+    //import VTooltip from 'v-tooltip'
 
     export default {
         props: ['reply'],

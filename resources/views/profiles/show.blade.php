@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-md-8">
-                <div class="card -mb-3">
+                <div class="card mb-3">
                     <div class="card-body">
                         Since {{ $profileUser->created_at->diffForHumans() }}
                         <avatar-form :user="{{ $profileUser }}"></avatar-form>

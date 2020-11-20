@@ -7,26 +7,26 @@ use App\Models\{User, Reply, Thread};
 
 class MentionUsersTest extends TestCase
 {
-    // /** @test */
-    // function mentioned_users_in_a_reply_are_notified()
-    // {
-    //     $this->withoutExceptionHandling();
-    //     $john = create(User::class, ['name' => 'JohnDoe']);
+    /** @test */
+    function mentioned_users_in_a_reply_are_notified()
+    {
+        $this->withoutExceptionHandling();
+        $john = create(User::class, ['name' => 'JohnDoe']);
 
-    //     $this->signIn($john);
+        $this->signIn($john);
 
-    //     $jane = create(User::class, ['name' => 'JaneDoe']);
+        $jane = create(User::class, ['name' => 'JaneDoe']);
 
-    //     $thread = create(Thread::class);
+        $thread = create(Thread::class);
 
-    //     $reply = make(Reply::class, [
-    //         'body' => 'Hey @JaneDoe check this out.'
-    //     ]);
+        $reply = make(Reply::class, [
+            'body' => 'Hey @JaneDoe check this out.'
+        ]);
 
-    //     $this->json('post', $thread->path() . '/replies', $reply->toArray());
+        $this->json('post', $thread->path() . '/replies', $reply->toArray());
 
-    //     $this->assertCount(1, $jane->notifications);
-    // }
+        $this->assertCount(1, $jane->notifications);
+    }
 
     /** @test */
     function it_can_fetch_all_mentioned_users_starting_with_the_given_characters()
