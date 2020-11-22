@@ -30,5 +30,5 @@
                 this.$refs.trix.value = '';
             });
         }
-    }
+    };
 </script>
