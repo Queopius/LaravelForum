@@ -39,7 +39,7 @@
                 this.show = true;
 
                 this.hide();
-            },
+            }, 
 
             hide() {
                 setTimeout(() => {

@@ -51,7 +51,7 @@
     
     @stack('styles')
 </head>
-<body>
+<body> 
     <div id="app">
         
         @include('layouts._nav')
