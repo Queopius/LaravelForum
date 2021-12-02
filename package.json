@@ -2,43 +2,38 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/Javascript/setup.js tests/Javascript/**/*.spec.js"
+        "production": "mix --production"
     },
     "devDependencies": {
         "@vue/test-utils": "^1.1.1",
-        "axios": "^0.19",
+        "axios": "^0.24.0",
         "bootstrap": "^4.0.0",
         "cross-env": "^7.0",
         "expect": "^26.6.2",
         "jquery": "^3.2",
         "jsdom": "^16.4.0",
         "jsdom-global": "^3.0.2",
-        "laravel-mix": "^5.0.9",
         "lodash": "^4.17.19",
-        "mocha": "^8.2.1",
-        "mocha-webpack": "^1.1.0",
         "popper.js": "^1.12",
         "resolve-url-loader": "^3.1.2",
         "sass": "^1.20.1",
-        "sass-loader": "^8.0.0",
+        "sass-loader": "^8.0.2",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
         "at.js": "^1.5.4",
-        "font-awesome": "^4.7.0",
         "graceful-fs": "^4.2.4",
         "jquery.caret": "^0.3.1",
         "moment": "^2.24.0",
         "stack-utils": "^2.0.3",
         "trix": "^1.2.3",
         "v-tooltip": "^2.0.3",
-        "vue-instantsearch": "^1.7.0"
+        "vue-instantsearch": "^4.1.1"
     }
 }

@@ -14,14 +14,13 @@ class FavoritesTest extends TestCase
     /** @test */
     function guests_cannot_favorite_anything()
     {
-        $this->post('replies/' . create(Reply::class)->id . '/favorites')->assertRedirect('login');
-        
-        // $this->assertGuest();
-        // $this->signIn();
+        $this->actingAsUser();
+        $this->post('replies/' . Reply::factory()->create()->id . '/favorites')->assertRedirect('login');
+       
 
-        // $this->withExceptionHandling()
-        //     ->post('replies/1/favorites')
-        //     ->assertRedirect('/login');
+        /* $this->withExceptionHandling() */
+            /* $this->post('replies/1/favorites')
+            ->assertRedirect('/login'); */
 
     }
 
@@ -30,7 +29,7 @@ class FavoritesTest extends TestCase
     {
         $this->signIn();
 
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->post('replies/' . $reply->id . '/favorites');
 

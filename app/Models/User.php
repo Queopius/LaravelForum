@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -45,7 +48,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] = \Hash::needsRehash($password) ? \Hash::make($password) : $password;
+        $this->attributes['password'] = Hash::needsRehash($password) 
+            ? Hash::make($password) 
+            : $password;
     }
 
     /**
@@ -120,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarPathAttribute($avatar)
     {
-        return asset(\Storage::url($avatar ?: 'avatars/default.png'));
+        return asset(Storage::url($avatar ?: 'avatars/default.png'));
     }
 
     /**

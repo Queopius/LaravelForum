@@ -17,7 +17,7 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     function unauthorized_users_may_not_update_threads()
     {
-        $thread = create(Thread::class, ['user_id' => create(User::class)->id]);
+        $thread = Thread::factory()->create(['user_id' => $this->createUser()->id]);
 
         $this->patch($thread->path(), [])->assertStatus(403);
     }
@@ -25,7 +25,7 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     function a_thread_requires_a_title_and_body_to_be_updated()
     {
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $thread = $this->createTreadRelationUser();
 
         $this->patch($thread->path(), ['title' => 'Changed'])->assertSessionHasErrors('body');
 
@@ -35,7 +35,7 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     function a_thread_can_be_updated_by_its_creator()
     {
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $thread = $this->createTreadRelationUser();
 
         $this->patch($thread->path(), [
             'title' => 'Changed',
@@ -46,5 +46,10 @@ class UpdateThreadsTest extends TestCase
             $this->assertEquals('Changed', $thread->title);
             $this->assertEquals('Changed body.', $thread->body);
         });
+    }
+
+    protected function createTreadRelationUser()
+    {
+        return Thread::factory()->create(['user_id' => $this->createUser()->id]);
     }
 }

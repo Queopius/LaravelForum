@@ -9,14 +9,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LockThreadsTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     function non_administrators_may_not_lock_threads()
     {
         $this->signIn();
 
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
 
         $this->post(route('locked-threads.store', $thread))->assertStatus(403);
 
@@ -27,9 +27,9 @@ class LockThreadsTest extends TestCase
     function administrators_can_lock_threads()
     {
         $this->withoutExceptionHandling();
-        $this->signIn(factory(User::class)->states('administrator')->create());
+        $this->signIn(User::factory()->states('administrator')->create());
 
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
 
         $this->post(route('locked-threads.store', $thread));
 
@@ -40,9 +40,9 @@ class LockThreadsTest extends TestCase
     function administrators_can_unlock_threads()
     {
         $this->withoutExceptionHandling();
-        $this->signIn(factory(User::class)->states('administrator')->create());
+        $this->signIn(User::factory()->states('administrator')->create());
 
-        $thread = create(Thread::class, ['user_id' => auth()->id(), 'locked' => true]);
+        $thread = Thread::factory()->create(['user_id' => auth()->id(), 'locked' => true]);
 
         $this->delete(route('locked-threads.destroy', $thread));
 
@@ -54,7 +54,7 @@ class LockThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class, ['locked' => true]);
+        $thread =Thread::factory()->create(['locked' => true]);
 
         $this->post($thread->path() . '/replies', [
             'body' => 'Foobar',

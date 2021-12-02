@@ -16,9 +16,9 @@ class UserTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = create(User::class);
+        $user = User::factory()->create();
 
-        $reply = create(Reply::class, ['user_id' => $user->id]);
+        $reply = Reply::factory()->create(['user_id' => $user->id]);
 
         $this->assertEquals($reply->id, $user->lastReply->id);
     }
@@ -28,7 +28,7 @@ class UserTest extends TestCase
     {
         $this->withoutExceptionHandling();
         
-        $user = create(User::class);
+        $user = User::factory()->create();
 
         $this->assertEquals(asset(Storage::url('avatars/default.png')), $user->avatar_path);
 

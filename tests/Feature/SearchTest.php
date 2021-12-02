@@ -15,8 +15,11 @@ class SearchTest extends TestCase
     {
         config(['scout.driver' => 'algolia']);
 
-        create(Thread::class, [], 2);
-        create(Thread::class, ['body' => 'A thread with the foobar term.'], 2);
+        Thread::factory()->count(2)->create([]);
+        Thread::factory()->count(1)->create(['body' => 'A thread with the foobar term.']);
+        Thread::factory()->count(1)->create(['body' => 'A thread with the foobar term.']);
+        /* create(Thread::class, [], 2);
+        create(Thread::class, ['body' => 'A thread with the foobar term.'], 2); */
 
         do {
             // Account for latency.

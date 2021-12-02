@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reply extends Model
 {
-    use Favoritable, RecordsActivity;
+    use Favoritable, RecordsActivity, HasFactory;
 
     /**
      * Don't auto-apply mass assignment protection.

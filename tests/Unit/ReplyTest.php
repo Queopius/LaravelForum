@@ -15,7 +15,7 @@ class ReplyTest extends TestCase
     /** @test */
     function it_has_an_owner()
     {
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->assertInstanceOf(User::class, $reply->owner);
     }
@@ -23,7 +23,7 @@ class ReplyTest extends TestCase
     /** @test */
     function it_knows_if_it_was_just_published()
     {
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->assertTrue($reply->wasJustPublished());
 
@@ -59,7 +59,7 @@ class ReplyTest extends TestCase
     /** @test */
     function it_knows_if_it_is_the_best_reply()
     {
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->assertFalse($reply->isBest());
 
@@ -71,7 +71,9 @@ class ReplyTest extends TestCase
     /** @test */
     function a_reply_body_is_sanitized_automatically()
     {
-        $reply = make(Reply::class, ['body' => '<script>alert("bad")</script><p>This is okay.</p>']);
+        $reply = Reply::factory()->make([
+            'body' => '<script>alert("bad")</script><p>This is okay.</p>'
+        ]);
 
         $this->assertEquals("<p>This is okay.</p>", $reply->body);
     }

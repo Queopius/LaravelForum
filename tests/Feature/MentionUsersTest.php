@@ -11,15 +11,15 @@ class MentionUsersTest extends TestCase
     function mentioned_users_in_a_reply_are_notified()
     {
         $this->withoutExceptionHandling();
-        $john = create(User::class, ['name' => 'JohnDoe']);
+        $john = $this->createUser(['name' => 'JohnDoe']);
 
         $this->signIn($john);
 
-        $jane = create(User::class, ['name' => 'JaneDoe']);
+        $jane = $this->createUser(['name' => 'JaneDoe']);
 
-        $thread = create(Thread::class);
+        $thread = Thread::factory()->create();
 
-        $reply = make(Reply::class, [
+        $reply = Reply::factory()->create([
             'body' => 'Hey @JaneDoe check this out.'
         ]);
 
@@ -31,9 +31,9 @@ class MentionUsersTest extends TestCase
     /** @test */
     function it_can_fetch_all_mentioned_users_starting_with_the_given_characters()
     {
-        create(User::class, ['name' => 'johndoe']);
-        create(User::class, ['name' => 'johndoe2']);
-        create(User::class, ['name' => 'janedoe']);
+        $this->createUser(['name' => 'JohnDoe']);
+        $this->createUser(['name' => 'johndoe2']);
+        $this->createUser(['name' => 'JaneDoe']);
 
         $results = $this->json('GET', '/api/users', ['name' => 'john']);
 

@@ -14,7 +14,7 @@ class ReadThreadsTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = create(Thread::class);
+        $this->thread = Thread::factory()->create();
     }
 
     /** @test */
@@ -36,9 +36,12 @@ class ReadThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $channel = create(Channel::class);
-        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
-        $threadNotInChannel = create(Thread::class);
+        $channel = Channel::factory()->create();
+        $threadInChannel = Thread::factory()->create([
+                                'channel_id' => $channel->id
+                            ]);
+
+        $threadNotInChannel = $this->thread;
 
         $this->get('/threads/' . $channel->slug)
             ->assertSee($threadInChannel->title)
@@ -50,10 +53,13 @@ class ReadThreadsTest extends TestCase
     {
          $this->withoutExceptionHandling();
 
-        $this->signIn(create(User::class, ['name' => 'JohnDoe']));
+        $this->signIn(User::factory()
+            ->create(['name' => 'JohnDoe']));
 
-        $threadByJohn = create(Thread::class, ['user_id' => auth()->id()]);
-        $threadNotByJohn = create(Thread::class);
+        $threadByJohn = Thread::factory()
+                        ->create(['user_id' => auth()->id()]);
+                        
+        $threadNotByJohn = $this->thread;
 
         $this->get('threads?by=JohnDoe')
             ->assertSee($threadByJohn->title)
@@ -65,17 +71,25 @@ class ReadThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $threadWithTwoReplies = create(Thread::class);
-        create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
+        $threadWithTwoReplies = Thread::factory()->create();
 
-        $threadWithThreeReplies = create(Thread::class);
-        create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
+        Reply::factory()->count(2)->create([
+                    'thread_id' => $threadWithTwoReplies->id
+                ]);
+
+        $threadWithThreeReplies = Thread::factory()->create();
+        Reply::factory()->count(3)->create([
+                    'thread_id' => $threadWithThreeReplies->id
+                ]);
 
         $threadWithNoReplies = $this->thread;
 
         $response = $this->getJson('threads?popular=1')->json();
 
-        $this->assertEquals([3, 2, 0], array_column($response['data'], 'replies_count'));
+        $this->assertEquals(
+            [3, 2, 0], 
+            array_column($response['data'], 'replies_count')
+        );
     }
 
     /** @test */
@@ -83,8 +97,9 @@ class ReadThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $thread = create(Thread::class);
-        create(Reply::class, ['thread_id' => $thread->id]);
+        Reply::factory()->create([
+            'thread_id' => $this->thread->id
+        ]);
 
         $response = $this->getJson('threads?unanswered=1')->json();
 
@@ -96,8 +111,11 @@ class ReadThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $thread = create(Thread::class);
-        create(Reply::class, ['thread_id' => $thread->id], 2);
+        $thread = $this->thread;
+
+        Reply::factory()->count(2)->create([
+                    'thread_id' => $thread->id
+                ]);
 
         $response = $this->getJson($thread->path() . '/replies')->json();
 
@@ -108,7 +126,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function we_record_a_new_visit_each_time_the_thread_is_read()
     {
-        $thread = create(Thread::class);
+        $thread = $this->thread;
 
         $this->assertSame(0, $thread->visits);
 

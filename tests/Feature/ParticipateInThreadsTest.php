@@ -14,8 +14,9 @@ class ParticipateInThreadsTest extends TestCase
     /** @test */
    function guest_cant_add_reply()
     {
+        $this->signIn();
         $this
-            ->post(create(Thread::class)->path() . '/replies')
+            ->post(Thread::factory()->create()->path() . '/replies')
             ->assertRedirect('login');
     }
 
@@ -23,8 +24,9 @@ class ParticipateInThreadsTest extends TestCase
    function an_authenticated_user_may_participate_in_forum_threads()
     {
         $this->signIn();
-        $thread = create(Thread::class);
-        $reply = make(Reply::class);
+        
+        $thread = Thread::factory()->create();
+        $reply = Reply::factory()->make();
 
         $this->post($thread->path() . '/replies', $reply->toArray());
 
@@ -35,7 +37,7 @@ class ParticipateInThreadsTest extends TestCase
     /** @test */
    function unauthorized_users_cannot_delete_replies()
     {
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->delete("replies/{$reply->id}")
             ->assertRedirect('login');
@@ -48,7 +50,9 @@ class ParticipateInThreadsTest extends TestCase
    function authorized_users_can_delete_replies()
     {
         $this->signIn();
-        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+        $reply = Reply::factory()->create([
+                'user_id' => auth()->id()
+            ]);
 
         $this->delete("replies/{$reply->id}");
 
@@ -57,7 +61,7 @@ class ParticipateInThreadsTest extends TestCase
 
     function unauthorized_users_cannot_update_replies()
     {
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $this->patch("/replies/{$reply->id}")
             ->assertRedirect('login');
@@ -72,7 +76,9 @@ class ParticipateInThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+        $reply = Reply::factory()->create([
+                'user_id' => auth()->id()
+            ]);
 
         $updatedReply = 'changed';
         $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
@@ -85,10 +91,11 @@ class ParticipateInThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class);
-        $reply = make(Reply::class, [
-            'body' => 'Yahoo Customer Support'
-        ]);
+        $thread = Thread::factory()->create();
+        $reply = Reply::factory()->make([
+                'body' => 'Yahoo Customer Support'
+            ]);
+
         $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
@@ -98,8 +105,8 @@ class ParticipateInThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class);
-        $reply = make(Reply::class);
+        $thread = Thread::factory()->create();
+        $reply = Reply::factory()->make();
 
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertStatus(201);

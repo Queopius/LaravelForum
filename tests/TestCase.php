@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use App\Models\User;
 use App\Exceptions\Handler;
 use Illuminate\Support\Str;
+use App\Models\{User, Admin};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Foundation\Testing\Artisan;
@@ -25,19 +25,19 @@ abstract class TestCase extends BaseTestCase
         
         //$this->disableExceptionHandling();
 
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $this->enableQueryLog();
     }
 
-    protected function actingAsAdmin($admin = null)
+    /* protected function actingAsAdmin($admin = null)
     {
         if ($admin == null) {
             $admin = $this->createAdmin();
         }
 
         return $this->actingAs($admin, 'admin');
-    }
+    } */
 
     protected function actingAsUser($user = null)
     {
@@ -48,19 +48,19 @@ abstract class TestCase extends BaseTestCase
         return $this->actingAs($user);
     }
 
-    protected function createAdmin(array $attributes = [])
+    /* protected function createAdmin(array $attributes = [])
     {
-        return factory(Admin::class)->create($attributes);
-    }
+        return Admin::factory()->create($attributes);
+    } */
 
     protected function createUser(array $attributes = [])
     {
-        return factory(User::class)->create($attributes);
+        return User::factory()->create($attributes);
     }
 
     protected function signIn($user = null)
     {
-        return tap($this)->actingAs($user ?? create(User::class));
+        return tap($this)->actingAs($user ?? User::factory()->create());
     }
 
     // Hat tip, @adamwathan.

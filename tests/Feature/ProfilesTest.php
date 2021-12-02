@@ -13,7 +13,7 @@ class ProfilesTest extends TestCase
     /** @test */
     function a_user_has_a_profile()
     {
-        $user = factory(User::class)->create();
+        $user = $this->createUser();
 
         $this->get("/profiles/{$user->name}")
             ->assertSee($user->name);
@@ -24,7 +24,7 @@ class ProfilesTest extends TestCase
     {
         $this->signIn();
 
-        $thread = factory(Thread::class)->create(['user_id' => auth()->id()]);
+        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
 
         $this->get("/profiles/" . auth()->user()->name)
             ->assertSee($thread->title)

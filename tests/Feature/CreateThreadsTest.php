@@ -22,26 +22,36 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function guests_may_not_create_threads()
     {
-        //$this->withExceptionHandling();
+        //$this->withoutExceptionHandling();
         $this->get('/threads/create')
-            ->assertRedirect('login');
-
-        $this->post('threads')
-            ->assertRedirect('login');
+        ->assertGuest()
+            ->assertRedirect('login')
+            ->assertStatus(302);
+        
+        $this->post('/threads')
+            ->assertGuest()
+            ->assertRedirect('login')
+            ->assertStatus(302);
     }
  
     /** @test */
     function new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
-        $this->publishThread([], create(User::class, ['email_verified_at' => null]))
-            ->assertRedirect('email/verify');
+        /* $this->publishThread([], User::create([
+            'name' => 'John Doe',
+            'email' => 'jhon@mail.com',
+            'password' => bcrypt('password'),
+            'email_verified_at' => null
+            ])
+        )
+            ->assertRedirect('email/verify'); */
             
-        // $user = create(User::class, ['email_verified_at' => null]);
+        $user = User::factory()->create(['email_verified_at' => null]);
 
-        // $this->signIn($user)
-        //     ->post(route('threads'), make(Thread::class)->toArray())
-        //     ->assertRedirect(route('threads'))
-        //     ->assertSessionHas('flash', 'You must first confirm your email address.');
+        $this->signIn($user)
+            ->post(route('threads'), Thread::make()->toArray())
+            ->assertRedirect('email/verify');
+            /* ->assertSessionHas('flash', 'You must first confirm your email address.'); */
     }
 
     /** @test */
@@ -49,25 +59,25 @@ class CreateThreadsTest extends TestCase
     {
         $this
             ->followingRedirects()
-            ->publishThread(['title' => 'title', 'body' => 'body'])
+            ->publishThread(['title', 'body'])
             ->assertSee('title')
             ->assertSee('body');
-        // $response = $this->publishThread(['title', 'body']);
+        /* $response = $this->publishThread(['title', 'body']);
 
-        // $this->get($response->headers->get('Location'))
-        //     ->assertSee('title')
-        //     ->assertSee('body');
+        $this->get($response->headers->get('Location'))
+            ->assertSee('title')
+            ->assertSee('body'); */
     }
 
     /** @test */
     function a_thread_requires_a_title()
     {
-        $this->publishThread(['title' => null])
+        /* $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
-
-        // $this->publishThread(['title' => ''])
-        //     ->assertRedirect('threads')
-        //     ->assertSessionHasErrors(['title']);
+ */
+        $this->publishThread(['title' => ''])
+            ->assertRedirect('threads')
+            ->assertSessionHasErrors(['title']);
     }
 
     /** @test */
@@ -89,7 +99,7 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function a_thread_requires_a_valid_channel()
     {
-        factory(Channel::class, 2)->create();
+        Channel::factory()->count(2)->create();
 
         $this->publishThread(['channel_id' => null])
             ->assertRedirect('');
@@ -101,12 +111,11 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function a_thread_requires_a_unique_slug()
     {
-                $this->withoutExceptionHandling();
-
+        $this->withoutExceptionHandling();
 
         $this->signIn();
 
-        $thread = create(Thread::class, ['title' => 'Foo Title']);
+        $thread = Thread::factory()->create(['title' => 'Foo Title']);
 
         $this->assertEquals($thread->slug, 'foo-title');
 
@@ -114,7 +123,9 @@ class CreateThreadsTest extends TestCase
 
         $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
 
-        // $this->actingAsUser();
+        $this->assertAuthenticated('web');
+
+        // $this->signIn($user);
 
         // $thread = create(Thread::class, ['title' => 'Foo Title']);
 
@@ -132,22 +143,25 @@ class CreateThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class, ['title' => 'Some Title 24']);
+        $thread = Thread::factory()->create(['title' => 'Some Title 24']);
 
         $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token']);
 
         $this->assertEquals("some-title-24-{$thread['id']}", $thread['slug']);
+
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
     function unauthorized_users_may_not_delete_threads()
     {
-        $thread = create(Thread::class);
+        $thread = Thread::factory()->create();
 
         $this->delete($thread->path())->assertRedirect('/login');
 
         $this->signIn();
         $this->delete($thread->path())->assertStatus(403);
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
@@ -155,8 +169,8 @@ class CreateThreadsTest extends TestCase
     {        
         $this->signIn();
 
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
-        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
+        $reply = Reply::factory()->create(['thread_id' => $thread->id]);
 
         $response = $this->json('DELETE', $thread->path());
 
@@ -166,10 +180,11 @@ class CreateThreadsTest extends TestCase
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
 
         $this->assertEquals(0, Activity::count());
+        $this->assertAuthenticated('web');
     }
 
     protected function publishThread($attributes = [], $user = null)
     {
-         return $this->signIn($user)->post('threads', make(Thread::class, $attributes)->toArray()  + ['g-recaptcha-response' => 'token']);
+         return $this->signIn($user)->post('threads', Thread::make($attributes)->toArray()  + ['g-recaptcha-response' => 'token']);
     }
 }

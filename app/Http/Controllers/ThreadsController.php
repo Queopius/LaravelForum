@@ -20,9 +20,9 @@ class ThreadsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  Channel      $channel
-     * @param ThreadFilters $filters
-     * @param \App\Trending $trending
+     * @param \App\Models\Channel      $channel
+     * @param \App\Models\ThreadFilters $filters
+     * @param \App\Models\Trending $trending
      * @return \Illuminate\Http\Response
      */
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
@@ -42,8 +42,8 @@ class ThreadsController extends Controller
     /**
      * Fetch all relevant threads.
      *
-     * @param Channel       $channel
-     * @param ThreadFilters $filters
+     * @param \App\Models\Channel       $channel
+     * @param \App\Models\ThreadFilters $filters
      * @return mixed
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
@@ -101,8 +101,8 @@ class ThreadsController extends Controller
      * Display the specified resource.
      *
      * @param  integer      $channel
-     * @param  \App\Thread  $thread
-     * @param \App\Trending $trending
+     * @param  \App\Models\Thread  $thread
+     * @param \App\Models\Trending $trending
      * @return \Illuminate\Http\Response
      */
     public function show($channel, Thread $thread, Trending $trending)
@@ -122,7 +122,7 @@ class ThreadsController extends Controller
      * Update the given thread.
      *
      * @param string $channel
-     * @param Thread $thread
+     * @param \App\Models\Thread $thread
      */
     public function update($channel, Thread $thread)
     {
@@ -140,7 +140,7 @@ class ThreadsController extends Controller
      * Delete the given thread.
      *
      * @param        $channel
-     * @param Thread $thread
+     * @param \App\Models\Thread $thread
      * @return mixed
      */
     public function destroy($channel, Thread $thread)

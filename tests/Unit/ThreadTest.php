@@ -21,7 +21,7 @@ class ThreadTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = create(Thread::class);
+        $this->thread = Thread::factory()->create();
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class ThreadTest extends TestCase
     /** @test */
     function has_a_replies()
     {
-        $reply = create(Reply::class, ['thread_id' => $this->thread]);
+        $reply = Reply::factory()->create(['thread_id' => $this->thread]);
 
         $this->assertInstanceOf(Collection::class, $this->thread->replies);
         $this->assertCount(1, $this->thread->replies);
@@ -86,15 +86,16 @@ class ThreadTest extends TestCase
     {
         Notification::fake();
 
-        $this->signIn()
-            ->thread
+        $tdd = $this->actingAsUser()->thread
             ->subscribe()
             ->addReply([
                 'body' => 'Foobar',
-                'user_id' => create(User::class)->id
+                'user_id' => User::factory()->create()->id,
             ]);
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
+
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
@@ -106,22 +107,25 @@ class ThreadTest extends TestCase
     /** @test */
     function a_thread_can_be_subscribed_to()
     {
-        $this->signIn();
+        $this->actingAs(User::factory()->create());
         $this->thread->subscribe();
 
         $this->assertEquals(1, $this->thread->subscriptions()
                 ->where('user_id', auth()->id())->count());
+        
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
     function a_thread_can_be_unsubscribed_from()
     {
-        $this->signIn();
+        $this->actingAs(User::factory()->create());
         $this->thread->subscribe();
         $this->thread->unsubscribe();
 
         $this->assertEquals(0, $this->thread->subscriptions()->where('user_id', auth()->id())->count());
 
+        $this->assertAuthenticated('web');
         // $this->hasThread()->subscribe($userId = 1)
         //     ->unsubscribe($userId);
 
@@ -131,21 +135,21 @@ class ThreadTest extends TestCase
     /** @test */
     function it_knows_if_the_authenticated_user_is_subscribed_to_it()
     {
-        $this->signIn();
-
+        $this->actingAs(User::factory()->create());
         $this->assertFalse($this->thread->isSubscribedTo);
 
         $this->thread->subscribe();
 
         $this->assertTrue($this->thread->isSubscribedTo);
+
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
     function a_thread_can_check_if_the_authenticated_user_has_read_all_replies()
     {
-        $this->signIn();
-
-        $thread = create(Thread::class);
+        $this->actingAs(User::factory()->create());
+        $thread = Thread::factory()->create();
 
         tap(auth()->user(), function ($user) use ($thread) {
             $this->assertTrue($thread->hasUpdatesFor($user));
@@ -154,12 +158,14 @@ class ThreadTest extends TestCase
 
             $this->assertFalse($thread->hasUpdatesFor($user));
         });
+
+        $this->assertAuthenticated('web');
     }
 
     /** @test */
     function is_sanitized_body_automatically()
     {
-        $thread = make(Thread::class, ['body' => '<script>alert("bad")</script><p>This is okay.</p>']);
+        $thread = Thread::factory()->make(['body' => '<script>alert("bad")</script><p>This is okay.</p>']);
 
         $this->assertEquals("<p>This is okay.</p>", $thread->body);
     }

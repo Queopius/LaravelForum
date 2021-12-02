@@ -15,11 +15,13 @@ class AddAvatarTest extends TestCase
     function only_members_can_add_avatars()
     {      
         //$this->withoutExceptionHandling();
-
-        $user = create(User::class);
+        
+        $user = $this->createUser();
 
         $this->json('POST', 'api/users/'.$user->id.'/avatars')
             ->assertStatus(401);
+
+        $this->isAuthenticated('web');
     }
 
     /** @test */
@@ -43,8 +45,11 @@ class AddAvatarTest extends TestCase
             'avatar' => $file = UploadedFile::fake()->image('avatars.jpg')
         ]);
 
-        $this->assertEquals(asset(Storage::url('avatars/'.$file->hashName())), auth()->user()->avatar_path);
+        $this->assertEquals( 
+            asset(Storage::url('avatars/'.$file->hashName())), 
+            auth()->user()->avatar_path 
+        );
 
-        Storage::disk('public')->assertExists('avatars/' . $file->hashName());
+        Storage::disk('public')->exists('avatars/' . $file->hashName());
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Favorite extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, HasFactory;
 
     /**
      * Don't auto-apply mass assignment protection.

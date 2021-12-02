@@ -5,8 +5,11 @@ namespace App\Providers;
 use App\Models\Channel;
 use Laravel\Scout\EngineManager;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,18 +20,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \View::composer('*', function ($view) {
-            $channels = \Cache::rememberForever('channels', function () {
+        View::composer('*', function ($view) {
+            $channels = Cache::rememberForever('channels', function () {
                 return Channel::all();
             });
 
             $view->with('channels', $channels);
         });
 
-        \Validator::extend('spamfree', 'App\Rules\SpamFree@passes');
+        Validator::extend('spamfree', 'App\Rules\SpamFree@passes');
 
         Blade::withoutDoubleEncoding();
-        Paginator::useBootstrapThree();
+        Paginator::useBootstrap();
+        //Paginator::useBootstrapThree();
 
         resolve(EngineManager::class)->extend('mysql', function () {
         return new MySqlSearchEngine;
