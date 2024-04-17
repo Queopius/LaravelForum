@@ -16,11 +16,13 @@
         "beyondcode/laravel-dump-server": "^1.7",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "7.*",
+        "http-interop/http-factory-guzzle": "^1.2",
         "laravel/framework": "8.*",
         "laravel/legacy-factories": "^1.1",
         "laravel/scout": "^9.3",
         "laravel/tinker": "^2.5",
         "laravel/ui": "3.*",
+        "meilisearch/meilisearch-php": "^1.7",
         "nunomaduro/collision": "5.*",
         "predis/predis": "^1.1",
         "psr/log": "^1.0",
@@ -45,7 +47,8 @@
             "pattern-skip-version": "(-build)"
         },
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true
         }
     },
     "extra": {
