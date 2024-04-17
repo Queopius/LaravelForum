@@ -4,19 +4,18 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Reply;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\{DatabaseMigrations, RefreshDatabase};
 
 class FavoritesTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function guests_cannot_favorite_anything()
+    public function guests_cannot_favorite_anything()
     {
         $this->actingAsUser();
         $this->post('replies/' . Reply::factory()->create()->id . '/favorites')->assertRedirect('login');
-       
+
 
         /* $this->withExceptionHandling() */
             /* $this->post('replies/1/favorites')
@@ -25,7 +24,7 @@ class FavoritesTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_favorite_any_reply()
+    public function an_authenticated_user_can_favorite_any_reply()
     {
         $this->signIn();
 
@@ -37,7 +36,7 @@ class FavoritesTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_unfavorite_a_reply()
+    public function an_authenticated_user_can_unfavorite_a_reply()
     {
         $this->signIn();
 
@@ -51,7 +50,7 @@ class FavoritesTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_may_only_favorite_a_reply_once()
+    public function an_authenticated_user_may_only_favorite_a_reply_once()
     {
         $this->signIn();
 

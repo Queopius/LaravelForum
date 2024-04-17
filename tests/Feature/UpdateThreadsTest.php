@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{User, Thread};
+use App\Models\{Thread, User};
 
 class UpdateThreadsTest extends TestCase
 {
@@ -15,7 +15,7 @@ class UpdateThreadsTest extends TestCase
     }
 
     /** @test */
-    function unauthorized_users_may_not_update_threads()
+    public function unauthorized_users_may_not_update_threads()
     {
         $thread = Thread::factory()->create(['user_id' => $this->createUser()->id]);
 
@@ -23,7 +23,7 @@ class UpdateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_title_and_body_to_be_updated()
+    public function a_thread_requires_a_title_and_body_to_be_updated()
     {
         $thread = $this->createTreadRelationUser();
 
@@ -31,9 +31,9 @@ class UpdateThreadsTest extends TestCase
 
         $this->patch($thread->path(), ['body' => 'Changed'])->assertSessionHasErrors('title');
     }
-    
+
     /** @test */
-    function a_thread_can_be_updated_by_its_creator()
+    public function a_thread_can_be_updated_by_its_creator()
     {
         $thread = $this->createTreadRelationUser();
 

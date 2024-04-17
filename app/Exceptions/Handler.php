@@ -6,6 +6,7 @@ use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+
 // use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
@@ -57,11 +58,11 @@ class Handler extends ExceptionHandler
                 return response('Sorry, validation failed.', 422);
             }
         }
-        
+
         if ($exception instanceof ThrottleException) {
             return response($exception->getMessage(), 429);
         }
-        
+
         // if ($this->isHttpException($exception)) {
         //     if (request()->expectsJson()) {
         //         switch ($exception->getStatusCode()) {

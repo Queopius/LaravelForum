@@ -30,8 +30,11 @@
         "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "2.*",
         "fakerphp/faker": "1.*",
+        "larastan/larastan": "^1.0",
         "laravel/dusk": "^6.19",
+        "laravel/pint": "^1.5",
         "mockery/mockery": "1.*",
+        "nunomaduro/phpinsights": "^2.10",
         "phpunit/phpunit": "9.*"
     },
     "config": {
@@ -40,6 +43,9 @@
         "optimize-autoloader": true,
         "fxp-asset": {
             "pattern-skip-version": "(-build)"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {

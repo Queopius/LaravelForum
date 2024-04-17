@@ -7,12 +7,11 @@ use App\Rules\SpamFree;
 use Illuminate\Support\Facades\Gate;
 use App\Exceptions\ThrottleException;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\UnauthorizedException;
 
 class CreatePostRequest extends FormRequest
 {
     /**
-     * 
+     *
      * Determine if the user is authorized to make this request.
      *
      * @return bool
