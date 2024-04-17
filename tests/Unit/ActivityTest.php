@@ -4,16 +4,15 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 use Tests\TestCase;
-use App\Models\{Thread, Activity, Reply};
+use App\Models\{Activity, Reply, Thread};
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 
 class ActivityTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function it_records_activity_when_a_thread_is_created()
+    public function it_records_activity_when_a_thread_is_created()
     {
         $thread = Thread::factory()->count(1)->create();
 

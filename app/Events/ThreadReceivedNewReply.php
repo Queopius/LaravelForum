@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Reply;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;

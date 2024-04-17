@@ -3,16 +3,15 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{User, Thread};
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\{Thread, User};
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 
 class LockThreadsTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
     /** @test */
-    function non_administrators_may_not_lock_threads()
+    public function non_administrators_may_not_lock_threads()
     {
         $this->signIn();
 
@@ -21,10 +20,10 @@ class LockThreadsTest extends TestCase
         $this->post(route('locked-threads.store', $thread))->assertStatus(403);
 
         $this->assertFalse($thread->fresh()->locked);
-    } 
+    }
 
     /** @test */
-    function administrators_can_lock_threads()
+    public function administrators_can_lock_threads()
     {
         $this->withoutExceptionHandling();
         $this->signIn(User::factory()->states('administrator')->create());
@@ -37,7 +36,7 @@ class LockThreadsTest extends TestCase
     }
 
     /** @test */
-    function administrators_can_unlock_threads()
+    public function administrators_can_unlock_threads()
     {
         $this->withoutExceptionHandling();
         $this->signIn(User::factory()->states('administrator')->create());

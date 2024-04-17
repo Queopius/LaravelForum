@@ -21,5 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 /* Route::get('api/users', [UsersController::class, 'index']);
 Route::post('api/users/{user}/avatars', [UserAvatarController::class, 'store'])
-	->middleware('auth')
-	->name('avatars'); */
+    ->middleware('auth')
+    ->name('avatars'); */

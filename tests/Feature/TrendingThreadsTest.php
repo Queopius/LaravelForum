@@ -3,9 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Trending, Thread};
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\{Thread, Trending};
+use Illuminate\Foundation\Testing\{DatabaseMigrations, RefreshDatabase};
 
 class TrendingThreadsTest extends TestCase
 {
@@ -15,13 +14,13 @@ class TrendingThreadsTest extends TestCase
     {
         parent::setUp();
 
-        $this->trending = new Trending();
+        $this->trending = new Trending;
 
         $this->trending->reset();
     }
 
     /** @test */
-    function it_increments_a_threads_score_each_time_it_is_read()
+    public function it_increments_a_threads_score_each_time_it_is_read()
     {
         $this->assertEmpty($this->trending->get());
 
