@@ -1,6 +1,12 @@
 {
-    "name": "queopius/laraforum",
+    "name": "queopius/forum",
     "description": "Forum for works.",
+    "authors": [
+        {
+            "name": "Queopius A.S.",
+            "email": "dev.queopius@gmail.com"
+        }
+    ],
     "keywords": ["framework", "laravel", "app", "forum", "queopius"],
     "license": "MIT",
     "type": "project",
