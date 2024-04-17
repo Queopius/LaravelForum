@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Rules\Recaptcha;
-use App\Models\{User, Thread, Channel, Activity, Reply};
+use App\Models\{Activity, Channel, Reply, Thread, User};
 
 class CreateThreadsTest extends TestCase
 {
@@ -20,22 +20,22 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function guests_may_not_create_threads()
+    public function guests_may_not_create_threads()
     {
         //$this->withoutExceptionHandling();
         $this->get('/threads/create')
         ->assertGuest()
             ->assertRedirect('login')
             ->assertStatus(302);
-        
+
         $this->post('/threads')
             ->assertGuest()
             ->assertRedirect('login')
             ->assertStatus(302);
     }
- 
+
     /** @test */
-    function new_users_must_first_confirm_their_email_address_before_creating_threads()
+    public function new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
         /* $this->publishThread([], User::create([
             'name' => 'John Doe',
@@ -45,7 +45,7 @@ class CreateThreadsTest extends TestCase
             ])
         )
             ->assertRedirect('email/verify'); */
-            
+
         $user = User::factory()->create(['email_verified_at' => null]);
 
         $this->signIn($user)
@@ -55,7 +55,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_authenticated_user_can_create_a_thread()
+    public function a_authenticated_user_can_create_a_thread()
     {
         $this
             ->followingRedirects()
@@ -70,7 +70,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_title()
+    public function a_thread_requires_a_title()
     {
         /* $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
@@ -81,14 +81,14 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_body()
+    public function a_thread_requires_a_body()
     {
         $this->publishThread(['body' => ''])
             ->assertRedirect('');
     }
 
     /** @test */
-    function a_thread_requires_recaptcha_verification()
+    public function a_thread_requires_recaptcha_verification()
     {
         unset(app()[Recaptcha::class]);
 
@@ -97,7 +97,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_valid_channel()
+    public function a_thread_requires_a_valid_channel()
     {
         Channel::factory()->count(2)->create();
 
@@ -109,7 +109,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_unique_slug()
+    public function a_thread_requires_a_unique_slug()
     {
         $this->withoutExceptionHandling();
 
@@ -139,7 +139,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
+    public function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
     {
         $this->signIn();
 
@@ -153,7 +153,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function unauthorized_users_may_not_delete_threads()
+    public function unauthorized_users_may_not_delete_threads()
     {
         $thread = Thread::factory()->create();
 
@@ -165,8 +165,8 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function authorized_users_can_delete_threads()
-    {        
+    public function authorized_users_can_delete_threads()
+    {
         $this->signIn();
 
         $thread = Thread::factory()->create(['user_id' => auth()->id()]);

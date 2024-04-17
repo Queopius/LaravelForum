@@ -9,9 +9,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ChannelTest extends TestCase
 {
     use DatabaseMigrations;
-    
+
     /** @test */
-    function a_channel_consists_of_threads()
+    public function a_channel_consists_of_threads()
     {
         $channel = Channel::factory()->create();
         $thread = Thread::factory()->create(['channel_id' => $channel->id]);

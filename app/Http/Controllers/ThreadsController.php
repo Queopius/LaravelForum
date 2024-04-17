@@ -154,5 +154,5 @@ class ThreadsController extends Controller
         }
 
         return redirect('/threads');
-    }    
+    }
 }

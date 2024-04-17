@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Ramsey\Uuid\Uuid;
 use App\Notifications\ThreadWasUpdated;
-use App\Models\{User, DatabaseNotificationUser};
+use App\Models\{DatabaseNotificationUser, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DatabaseNotificationUserFactory extends Factory

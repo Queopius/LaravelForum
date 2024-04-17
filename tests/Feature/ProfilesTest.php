@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{User, Thread};
+use App\Models\{Thread, User};
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ProfilesTest extends TestCase
@@ -11,7 +11,7 @@ class ProfilesTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function a_user_has_a_profile()
+    public function a_user_has_a_profile()
     {
         $user = $this->createUser();
 
@@ -20,7 +20,7 @@ class ProfilesTest extends TestCase
     }
 
     /** @test */
-    function profiles_display_all_threads_created_by_the_associated_user()
+    public function profiles_display_all_threads_created_by_the_associated_user()
     {
         $this->signIn();
 

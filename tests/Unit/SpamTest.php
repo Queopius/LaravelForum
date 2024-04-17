@@ -8,9 +8,9 @@ use App\Inspections\Spam;
 class SpamTest extends TestCase
 {
     /** @test */
-    function it_checks_for_invalid_keywords()
+    public function it_checks_for_invalid_keywords()
     {
-        $spam = new Spam();
+        $spam = new Spam;
 
         $this->assertFalse($spam->detect('Innocent reply here'));
 
@@ -20,9 +20,9 @@ class SpamTest extends TestCase
     }
 
     /** @test */
-    function it_checks_for_any_key_being_held_down()
+    public function it_checks_for_any_key_being_held_down()
     {
-        $spam = new Spam();
+        $spam = new Spam;
 
         $this->expectException('Exception');
 

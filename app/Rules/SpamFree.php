@@ -5,7 +5,7 @@ namespace App\Rules;
 use App\Inspections\Spam;
 use Illuminate\Contracts\Validation\Rule;
 
-class SpamFree Implements Rule 
+class SpamFree implements Rule
 {
     /**
      * Create a new rule instance.
@@ -16,7 +16,7 @@ class SpamFree Implements Rule
     {
         //
     }
-    
+
     /**
      * Determine if the given attribute passes our spam validation.
      *

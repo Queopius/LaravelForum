@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Mail\PleaseConfirmYourEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RegistrationTest extends TestCase
@@ -14,7 +15,7 @@ class RegistrationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_confirmation_email_is_sent_upon_registration()
+    public function a_confirmation_email_is_sent_upon_registration()
     {
         Mail::fake();
 
@@ -29,7 +30,7 @@ class RegistrationTest extends TestCase
     }
 
     /** @test */
-    function user_can_fully_confirm_their_email_addresses()
+    public function user_can_fully_confirm_their_email_addresses()
     {
         $user = $this->createUser()
             ->make()
