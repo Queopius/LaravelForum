@@ -25,7 +25,7 @@ A simple forum application built with Laravel.
 Forum is a web application where users can create threads, post replies, and engage in discussions on various topics.
 
 ### Requirements
-- Laravel 8
+- Laravel 8 (for default)
 - PHP 8.0
 - Composer
 - Redis
