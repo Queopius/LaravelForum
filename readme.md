@@ -22,6 +22,8 @@ Forum is a web application where users can create threads, post replies, and eng
 - Laravel 8
 - PHP 8.0
 - Composer
+- Redis
+- Algolia account (for search functionality)
 
 ### Installation
 1. **Clone the repository in SSH:**
@@ -50,19 +52,32 @@ php artisan key:generate
 ```
 
 6. Configure the database connection in the .env file.
+7. Configure Redis connection in the .env file:
+```bash
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
 
-7. Run migrations to create the database tables and Seeders:
+8. Configure Algolia credentials in the .env file:
+```bash
+ALGOLIA_APP_ID=your_app_id
+ALGOLIA_SECRET=your_secret
+ALGOLIA_SEARCH=your_search_key
+```
+
+9. Run migrations to create the database tables and Seeders:
 ```bash
 php artisan migrate
 php artisan db:seed
 ```
 
-8. Serve the application:
+10. Serve the application:
 ```bash
 php artisan serve
 ```
 
-9. Access the application in your web browser at http://localhost:8000.
+11. Access the application in your web browser at http://localhost:8000.
 
 ### Running Tests
 * PHPUnit: Run PHPUnit tests with the following command:
