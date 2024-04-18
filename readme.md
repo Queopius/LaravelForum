@@ -18,7 +18,7 @@ A simple forum application built with Laravel.
 ## Description
 Forum is a web application where users can create threads, post replies, and engage in discussions on various topics.
 
-## Requirements
+### Requirements
 - Laravel 8
 - PHP 8.0
 - Composer
@@ -29,23 +29,56 @@ Forum is a web application where users can create threads, post replies, and eng
 git clone git@github.com:Queopius/forum.git
 ```
 
-## Navigate to the project directory:
+2. Navigate to the project directory:
 ```bash
 cd forum
 ```
 
-## Install composer dependencies:
+3. Install composer dependencies:
 ```bash
 composer install
 ```
 
-## Copy the example environment file:
+4. Copy the example environment file:
 ```bash
 cp .env.example .env
 ```
 
-## Copy the example environment file:
+5. Generate application key:
 ```bash
 php artisan key:generate
 ```
 
+6. Configure the database connection in the .env file.
+
+7. Run migrations to create the database tables and Seeders:
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+8. Serve the application:
+```bash
+php artisan serve
+```
+
+9. Access the application in your web browser at http://localhost:8000.
+
+## Running Tests
+* PHPUnit: Run PHPUnit tests with the following command:
+```bash
+./vendor/bin/phpunit
+```
+
+## Static Analysis
+* PHPStan (LaraStan): Analyze code with PHPStan for static analysis:
+```bash
+./vendor/bin/phpstan analyze
+```
+
+* PHP CodeSniffer: Check code syntax with Laravel Pint
+```bash
+./vendor/bin/pint --preset=per psr12
+```
+
+## Enjoy
