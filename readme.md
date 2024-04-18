@@ -76,9 +76,9 @@ php artisan serve
 ./vendor/bin/phpstan analyze
 ```
 
-* PHP CodeSniffer: Check code syntax with Laravel Pint
+* Pint: Static Code Analysis With Laravel Pint
 ```bash
-./vendor/bin/pint --preset=per psr12
+./vendor/bin/pint --preset psr12
 ```
 
 ## Enjoy
