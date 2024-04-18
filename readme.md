@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="https://github.com/Queopius">
-    <img src="public/svg/forum-example01.png" alt="Queopius Laravel / Developer">
+    <img src="public/svg/forum-oficial.png" alt="Queopius Laravel / Developer">
   </a>
 </p>
 
