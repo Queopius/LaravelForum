@@ -15,7 +15,7 @@
 
 A simple forum application built with Laravel.
 
-## Description
+### Description
 Forum is a web application where users can create threads, post replies, and engage in discussions on various topics.
 
 ### Requirements
@@ -23,7 +23,7 @@ Forum is a web application where users can create threads, post replies, and eng
 - PHP 8.0
 - Composer
 
-## Installation
+### Installation
 1. **Clone the repository in SSH:**
 ```bash
 git clone git@github.com:Queopius/forum.git
@@ -64,13 +64,13 @@ php artisan serve
 
 9. Access the application in your web browser at http://localhost:8000.
 
-## Running Tests
+### Running Tests
 * PHPUnit: Run PHPUnit tests with the following command:
 ```bash
 ./vendor/bin/phpunit
 ```
 
-## Static Analysis
+### Static Analysis
 * PHPStan (LaraStan): Analyze code with PHPStan for static analysis:
 ```bash
 ./vendor/bin/phpstan analyze
