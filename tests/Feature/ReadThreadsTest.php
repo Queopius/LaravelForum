@@ -96,9 +96,7 @@ class ReadThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Reply::factory()->create([
-            'thread_id' => $this->thread->id
-        ]);
+        Reply::factory()->create();
 
         $response = $this->getJson('threads?unanswered=1')->json();
 

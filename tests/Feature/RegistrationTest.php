@@ -32,24 +32,33 @@ class RegistrationTest extends TestCase
     /** @test */
     public function user_can_fully_confirm_their_email_addresses()
     {
-        $user = $this->createUser()
-            ->make()
-            ->makeVisible([bcrypt('password')]);
+        $user = User::factory()->make();
+
+        $userData = [
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'password' => bcrypt('password123'),
+        ];
+
+        //dd($user->password);
 
         Mail::fake();
         Mail::assertNothingSent();
 
-        $this->post(route('register'), $user->toArray());
+        //dd($user->toArray());
+        //$this->post(route('register'), $user->toArray());
+        $response = $this->post(route('register'), $userData);
+        dd($response->content());
 
         $user = User::firstWhere('email', $user->email);
 
-        Mail::hasSent($user, PleaseConfirmYourEmail::class);
-        //Mail::assertSentTimes(1, PleaseConfirmYourEmail::class);
+        //Mail::hasSent($user, PleaseConfirmYourEmail::class);
+        Mail::assertSentTimes(1, PleaseConfirmYourEmail::class);
 
-        /* tap($user->fresh(), function ($user) {
+        tap($user->fresh(), function ($user) {
             $this->assertTrue($user->confirmed);
             $this->assertNull($user->confirmation_token);
-        }); */
+        });
     }
 
     // /** @test */

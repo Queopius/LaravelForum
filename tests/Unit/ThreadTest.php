@@ -84,14 +84,27 @@ class ThreadTest extends TestCase
     {
         Notification::fake();
 
-        $tdd = $this->actingAsUser()->thread
-            ->subscribe()
+        $thread = Thread::factory()->create();
+        $user = User::factory()->create();
+
+        //dd($user->first()->id);
+
+        $thread->subscribe($user->first()->id);
+
+        //dd($thread);
+        $thread->addReply([
+            'body' => 'Foobar',
+            'user_id' => $user->first()->id,
+        ]);
+/* 
+        $tdd = $thread
+            ->subscribe($user->id)
             ->addReply([
                 'body' => 'Foobar',
-                'user_id' => User::factory()->create()->id,
-            ]);
+                'user_id' => $user->id,
+            ]); */
 
-        Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
+        Notification::assertSentTo($user->first(), ThreadWasUpdated::class);
 
         $this->assertAuthenticated('web');
     }

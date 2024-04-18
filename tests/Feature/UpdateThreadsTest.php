@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\{Thread, User};
+use Illuminate\Auth\Access\AuthorizationException;
 
 class UpdateThreadsTest extends TestCase
 {
@@ -17,6 +18,8 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     public function unauthorized_users_may_not_update_threads()
     {
+        $this->expectException(AuthorizationException::class);
+
         $thread = Thread::factory()->create(['user_id' => $this->createUser()->id]);
 
         $this->patch($thread->path(), [])->assertStatus(403);
@@ -25,11 +28,14 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     public function a_thread_requires_a_title_and_body_to_be_updated()
     {
+        //$this->signIn();
         $thread = $this->createTreadRelationUser();
 
-        $this->patch($thread->path(), ['title' => 'Changed'])->assertSessionHasErrors('body');
+        $this->patch($thread->path(), ['title' => 'Changed'])
+            ->assertSessionHasErrors('body');
 
-        $this->patch($thread->path(), ['body' => 'Changed'])->assertSessionHasErrors('title');
+        $this->patch($thread->path(), ['body' => 'Changed'])
+            ->assertSessionHasErrors('title');
     }
 
     /** @test */
@@ -50,6 +56,11 @@ class UpdateThreadsTest extends TestCase
 
     protected function createTreadRelationUser()
     {
-        return Thread::factory()->create(['user_id' => $this->createUser()->id]);
+        return Thread::factory()
+            ->create(
+                [
+                    'user_id' => User::factory()->create()->id
+                ]
+            );
     }
 }

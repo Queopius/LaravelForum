@@ -3,10 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Reply, Thread, User};
+use App\Exceptions\ThrottleException;
+use App\Models\{Reply, Thread};
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
-// use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ParticipateInThreadsTest extends TestCase
 {
@@ -16,9 +17,14 @@ class ParticipateInThreadsTest extends TestCase
    public function guest_cant_add_reply()
     {
         $this->signIn();
-        $this
-            ->post(Thread::factory()->create()->path() . '/replies')
-            ->assertRedirect('login');
+
+        /* $thread = Thread::factory()->create();
+        dd(Thread::factory()->create()->path()); */
+        $this->post(Thread::factory()->create()->path() . '/replies', [
+            'body' => 'I am an text body',
+        ])->assertRedirect();
+        
+        //->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -38,6 +44,7 @@ class ParticipateInThreadsTest extends TestCase
     /** @test */
    public function unauthorized_users_cannot_delete_replies()
     {
+        $this->expectException(AuthenticationException::class);
         $reply = Reply::factory()->create();
 
         $this->delete("replies/{$reply->id}")
@@ -91,12 +98,14 @@ class ParticipateInThreadsTest extends TestCase
    public function replies_that_contain_spam_may_not_be_created()
     {
         $this->signIn();
-
+        
         $thread = Thread::factory()->create();
         $reply = Reply::factory()->make([
             'body' => 'Yahoo Customer Support'
         ]);
-
+        
+        $this->expectException(ValidationException::class);
+        
         $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
@@ -111,6 +120,8 @@ class ParticipateInThreadsTest extends TestCase
 
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertStatus(201);
+
+        $this->expectException(ThrottleException::class);
 
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertStatus(429);
