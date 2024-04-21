@@ -42,7 +42,7 @@ Route::group(['prefix' => 'threads'], function () {
             ->middleware('auth'); */
 
         Route::get('/create', [ThreadsController::class, 'create'])
-            ->name('threads.create')
+            ->name('create')
             ->middleware('auth');
 
         Route::get('{channel}/{thread}', [ThreadsController::class, 'show'])
@@ -53,7 +53,7 @@ Route::group(['prefix' => 'threads'], function () {
             ->middleware(['verified', 'auth']);
 
         Route::get('/{thread}/edit', [ThreadsController::class, 'edit'])
-            ->name('threads.edit')
+            ->name('edit')
             ->middleware('auth');
 
         Route::delete('{channel}/{thread}', [ThreadsController::class, 'destroy'])

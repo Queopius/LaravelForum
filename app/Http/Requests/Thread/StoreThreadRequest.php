@@ -43,10 +43,10 @@ class StoreThreadRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|spamfree',
-            'body' => 'required|spamfree',
-            'channel_id' => 'required|exists:channels,id',
-            'g-recaptcha-response' => ['required', new Recaptcha], // Validate recaptcha
+            'title' => ['required', 'spamfree'],
+            'body' => ['required', 'spamfree'],
+            'channel_id' => ['required', 'exists:channels,id'],
+            'g-recaptcha-response' => ['required', new Recaptcha],
         ];
     }
 

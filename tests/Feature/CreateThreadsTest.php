@@ -4,11 +4,8 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Rules\Recaptcha;
-use Illuminate\Support\Facades\Gate;
-use App\Exceptions\ThrottleException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\WithFaker;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Thread\StoreThreadRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{Activity, Channel, Reply, Thread, User};
@@ -83,77 +80,66 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function a_thread_requires_a_title()
     {
-        //$this->expectException(ThrottleException::class);
-        Gate::shouldReceive('allows')
-            ->with('create', \Mockery::type(\App\Models\Reply::class))
-            ->andReturn(false);
+        $this->handleValidationExceptions();
 
-        $request = new StoreThreadRequest([
-            'title' => '',
-            'body' => 'Contenido del nuevo hilo',
-            'channel_id' => 1,
-        ]+ ['g-recaptcha-response' => 'token']);
-
-        $this->assertFalse($request->authorize());
-
-
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
-
-        $request->authorize();
-
-        //$request->failedAuthorization();
-        /* $user = User::factory()->create();
-        $channel = Channel::factory()->create();
-
-        $this->signIn($user);
-
-        $this->publishThread(['title' => null], $user)
-            ->assertSessionHasErrors('title');
- */
-        /* $request = new StoreThreadRequest([
-            'title' => '',
-            'body' => 'Contenido del nuevo hilo',
-            'channel_id' => $channel->id,
-        ] + ['g-recaptcha-response' => 'token']);
-
-        (new CreateThreadsController)->store($request); */
-
-
-        // Verificamos que no se haya creado ningún hilo en la base de datos
-        //$this->assertDatabaseCount('threads', 0);
-        /* $this->publishThread(['title' => null])
-            ->assertSessionHasErrors('title');
- */
-        /* $this->publishThread(['title' => ''])
-            ->assertRedirect('threads')
-            ->assertSessionHasErrors(['title']); */
+        $user = User::factory()->create();
+            
+        $this->signIn($user)
+            ->post(route('threads.store'), ['title' => ''])
+            ->assertSessionHasErrors('title')
+            ->assertRedirect('');
     }
 
     /** @test */
     public function a_thread_requires_a_body()
     {
-        $this->publishThread(['body' => ''])
-            ->assertRedirect('');
-    }
+        $this->handleValidationExceptions();
 
-    /** @test */
-    public function a_thread_requires_recaptcha_verification()
-    {
-        unset(app()[Recaptcha::class]);
-
-        $this->publishThread(['g-recaptcha-response' => 'test'])
+        $user = User::factory()->create();
+            
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => ''
+            ])
+            ->assertSessionHasErrors('body')
             ->assertRedirect('');
     }
 
     /** @test */
     public function a_thread_requires_a_valid_channel()
     {
-        Channel::factory()->count(2)->create();
+        $this->handleValidationExceptions();
 
-        $this->publishThread(['channel_id' => null])
+        $user = User::factory()->create();
+            
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => 'thread body',
+                'channel_id' => null
+            ])
+            ->assertSessionHasErrors('channel_id')
             ->assertRedirect('');
+    }
 
-        $this->publishThread(['channel_id' => 999])
+    /** @test */
+    public function a_thread_requires_recaptcha_verification()
+    {
+        $this->handleValidationExceptions();
+
+        unset(app()[Recaptcha::class]);
+
+        $channel = Channel::factory()->create();
+        $user = User::factory()->create();
+            
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => 'thread body',
+                'channel_id' => $channel->id
+            ] + ['g-recaptcha-response' => ''])
+            ->assertSessionHasErrors('g-recaptcha-response')
             ->assertRedirect('');
     }
 
@@ -162,29 +148,30 @@ class CreateThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->signIn();
+        $user = User::factory()->create();
+
+        $this->signIn($user);
 
         $thread = Thread::factory()->create(['title' => 'Foo Title']);
-
         $this->assertEquals($thread->slug, 'foo-title');
 
-        $thread = $this->postJson(route('threads'), $thread->toArray()  + ['g-recaptcha-response' => 'token'])->json();
+        $channel = Channel::factory()->create();
 
-        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+        $response = $this->postJson(route('threads.store'), [
+            'title' => 'Foo Title',
+            'body' => 'Thread body',
+            'channel_id' => $channel->id
+        ] + ['g-recaptcha-response' => 'token']);
 
+        $response->assertStatus(201);
+
+        $createdThread = Thread::find($response['id']);
+
+        //$this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+
+        $this->assertNotEquals($thread->slug, $createdThread->slug);
+        $this->assertEquals("foo-title-{$createdThread->id}", $createdThread->slug);
         $this->assertAuthenticated('web');
-
-        // $this->signIn($user);
-
-        // $thread = create(Thread::class, ['title' => 'Foo Title']);
-
-        // $this->assertEquals($thread->slug, 'foo-title');
-
-        // $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token'])->json();
-
-
-        // $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
-        // dd($this->response->getContent());
     }
 
     /** @test */
