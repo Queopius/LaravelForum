@@ -1,18 +1,21 @@
 <?php
 
-use App\Http\Controllers\ThreadsController;
 use Illuminate\Support\Facades\{Auth, Route};
+use App\Http\Controllers\Threads\{
+    ThreadsController,
+    CreateThreadsController,
+    ThreadSubscriptionsController,
+    LockedThreadsController,
+};
 use App\Http\Controllers\{
     Api\UserAvatarController,
     Api\UsersController,
     BestRepliesController,
     FavoritesController,
     HomeController,
-    LockedThreadsController,
     ProfilesController,
     RepliesController,
     SearchController,
-    ThreadSubscriptionsController,
     UserNotificationsController
 };
 
@@ -33,17 +36,25 @@ Route::get('threads/search', [SearchController::class, 'show']);
 Route::group(['prefix' => 'threads'], function () {
     Route::get('/', [ThreadsController::class, 'index'])->name('threads');
     Route::name('threads.')->group(function () {
-        Route::resource('/', ThreadsController::class)
+        /* Route::resource('/', ThreadsController::class)
             ->parameters(['/' => 'thread'])
             ->only(['create', 'edit'])
+            ->middleware('auth'); */
+
+        Route::get('/create', [ThreadsController::class, 'create'])
+            ->name('threads.create')
             ->middleware('auth');
 
         Route::get('{channel}/{thread}', [ThreadsController::class, 'show'])
             ->name('show');
 
-        Route::post('/', [ThreadsController::class, 'store'])
+        Route::post('/', [CreateThreadsController::class, 'store'])
             ->name('store')
             ->middleware(['verified', 'auth']);
+
+        Route::get('/{thread}/edit', [ThreadsController::class, 'edit'])
+            ->name('threads.edit')
+            ->middleware('auth');
 
         Route::delete('{channel}/{thread}', [ThreadsController::class, 'destroy'])
             ->name('destroy')

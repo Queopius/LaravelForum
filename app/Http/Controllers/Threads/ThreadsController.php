@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Threads;
 
-use App\Rules\Recaptcha;
-use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
+use App\Http\Controllers\Controller;
 use App\Models\{Channel, Thread, Trending};
 
 class ThreadsController extends Controller
@@ -70,10 +69,10 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Rules\Recaptcha $recaptcha
+     * @param  StoreThreadRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Recaptcha $recaptcha)
+    /* public function store(StoreThreadRequest $request): Response
     {
         $request->validate([
             'title' => 'required|spamfree',
@@ -89,13 +88,8 @@ class ThreadsController extends Controller
             'body' => $request->body
         ]);
 
-        if (request()->wantsJson()) {
-            return response($thread, 201);
-        }
-
-        return redirect($thread->path())
-            ->with('flash', 'Your thread has been published!');
-    }
+        return (new ThreadService)->createThread($request->validated());
+    } */
 
     /**
      * Display the specified resource.

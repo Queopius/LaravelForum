@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Threads;
 
 use App\Models\Thread;
+use Illuminate\Routing\Controller;
 use Illuminate\Http\{Request, Response};
 
 class LockedThreadsController extends Controller
