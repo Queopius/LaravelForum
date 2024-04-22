@@ -1,11 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Replies;
 
+use App\Models\Reply;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\ReplyService;
 
-class DestroyRepliesController extends Controller
+final class DestroyRepliesController extends Controller
 {
-    //
+    /**
+     * Delete the given reply.
+     *
+     * @param  Reply $reply
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        return (new ReplyService)->destroy($reply);
+    }
 }

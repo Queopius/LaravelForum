@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ReplyService;
 use App\Models\{Reply, Thread};
-use App\Http\Requests\CreatePostRequest;
 
 class RepliesController extends Controller
 {
@@ -37,24 +35,5 @@ class RepliesController extends Controller
         $this->authorize('update', $reply);
 
         $reply->update(request()->validate(['body' => 'required|spamfree']));
-    }
-
-    /**
-     * Delete the given reply.
-     *
-     * @param  Reply $reply
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Reply $reply)
-    {
-        $this->authorize('update', $reply);
-
-        $reply->delete();
-
-        if (request()->expectsJson()) {
-            return response(['status' => 'Reply deleted']);
-        }
-
-        return back();
     }
 }

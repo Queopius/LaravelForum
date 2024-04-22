@@ -10,7 +10,7 @@ use App\Services\ReplyService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reply\CreateRepliesRequest;
 
-class CreateRepliesController extends Controller
+final class CreateRepliesController extends Controller
 {
     /**
      * Persist a new reply.
@@ -25,6 +25,6 @@ class CreateRepliesController extends Controller
     {
         $this->authorize('create', Reply::class);
 
-        return (new ReplyService)->addReply($thread, $form);
+        return (new ReplyService)->store($thread, $form);
     }
 }

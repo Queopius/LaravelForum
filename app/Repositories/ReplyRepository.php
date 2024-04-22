@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +24,17 @@ class ReplyRepository
                 'user_id' => auth()->id()
             ]
         )->load('owner');
+    }
+
+    /**
+     * Delete the given reply.
+     *
+     * @param  Reply $reply
+     * 
+     * @return void
+    */
+    public static function delete(Reply $reply)
+    {
+        $reply->delete();
     }
 }

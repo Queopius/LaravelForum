@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
 use App\Http\Controllers\Replies\{
     CreateRepliesController,
+    DestroyRepliesController,
 };
 use App\Http\Controllers\Threads\{
     CreateThreadsController,
@@ -89,7 +90,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'replies/{reply}'], function (
     Route::delete('/favorites', [FavoritesController::class, 'destroy']);
     Route::post('/best', [BestRepliesController::class, 'store'])
         ->name('best-replies.store');
-    Route::delete('', [RepliesController::class, 'destroy'])
+    Route::delete('', [DestroyRepliesController::class, 'destroy'])
         ->name('replies.destroy');
     Route::patch('', [RepliesController::class, 'update']);
 });
