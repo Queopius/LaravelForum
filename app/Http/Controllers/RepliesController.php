@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ReplyService;
 use App\Models\{Reply, Thread};
 use App\Http\Requests\CreatePostRequest;
 
@@ -24,26 +25,6 @@ class RepliesController extends Controller
     public function index($channelId, Thread $thread)
     {
         return $thread->replies()->paginate(20);
-    }
-
-    /**
-     * Persist a new reply.
-     *
-     * @param  integer           $channelId
-     * @param  Thread            $thread
-     * @param  CreatePostRequest $form
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function store($channelId, Thread $thread, CreatePostRequest $form)
-    {
-        if ($thread->locked) {
-            return response('Thread is locked', 422);
-        }
-
-        return $thread->addReply([
-            'body' => $form->body,
-            'user_id' => auth()->id()
-        ])->load('owner');
     }
 
     /**

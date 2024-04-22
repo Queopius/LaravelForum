@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
+use App\Http\Controllers\Replies\{
+    CreateRepliesController,
+};
 use App\Http\Controllers\Threads\{
     CreateThreadsController,
     LockedThreadsController,
@@ -31,16 +34,13 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
  * Reoute Thread Searach
  */
 Route::get('threads/search', [SearchController::class, 'show']);
+
 /**
  * Routes Thread
  */
 Route::group(['prefix' => 'threads'], function () {
     Route::get('/', [ThreadsController::class, 'index'])->name('threads');
     Route::name('threads.')->group(function () {
-        /* Route::resource('/', ThreadsController::class)
-            ->parameters(['/' => 'thread'])
-            ->only(['create', 'edit'])
-            ->middleware('auth'); */
 
         Route::get('/create', [ThreadsController::class, 'create'])
             ->name('create')
@@ -75,7 +75,7 @@ Route::group(['prefix' => 'threads'], function () {
      * Routes Reply
      */
     Route::get('{channel}/{thread}/replies', [RepliesController::class, 'index']);
-    Route::post('{channel}/{thread}/replies', [RepliesController::class, 'store'])
+    Route::post('{channel}/{thread}/replies', [CreateRepliesController::class, 'store'])
         ->name('replies.store');
     Route::get('{channel}', [ThreadsController::class, 'index'])
         ->name('thread.index');
@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'replies/{reply}'], function (
         ->name('replies.destroy');
     Route::patch('', [RepliesController::class, 'update']);
 });
+
 /**
  * Routes Profiles
  */
@@ -108,6 +109,7 @@ Route::group(['prefix' => 'profiles/{user}'], function () {
  * Routes Registration
  */
 Route::get('/register/confirm', [RegisterConfirmationController::class, 'index'])->name('register.confirm');
+
 /**
  * Routes Api Users
  */
@@ -115,6 +117,7 @@ Route::get('api/users', [UsersController::class, 'index']);
 Route::post('api/users/{user}/avatars', [UserAvatarController::class, 'store'])
     ->middleware('auth')
     ->name('avatars');
+
 /**
  * Routes Locked Thread
  */
