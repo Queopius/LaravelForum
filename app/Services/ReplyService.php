@@ -7,10 +7,13 @@ namespace App\Services;
 use Throwable;
 use App\Models\Reply;
 use App\Models\Thread;
+use Illuminate\Http\JsonResponse;
 use App\Repositories\ReplyRepository;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Reply\CreateRepliesRequest;
+use Illuminate\Http\Response;
 
-class ReplyService
+final class ReplyService
 {
     /**
      * Persist a new reply.
@@ -24,7 +27,6 @@ class ReplyService
     public function store(Thread $thread, CreateRepliesRequest $form)
     {
         try {
-
             if ($thread->locked) {
                 return response('Thread is locked', 422);
             }
@@ -46,14 +48,9 @@ class ReplyService
     public function destroy(Reply $reply)
     {
         try {
-
             ReplyRepository::delete($reply);
 
-            if (request()->expectsJson()) {
-                return response(['status' => 'Reply deleted']);
-            }
-
-            return back();
+            return $this->responseForDeleteRequest();
         } catch (Throwable $e) {
             return back()->withErrors('Unable to delete reply.');
         }
@@ -63,17 +60,50 @@ class ReplyService
      * Update an existing reply.
      *
      * @param  Reply $reply
-     * @return 
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Reply $reply)
     {
         try {
             ReplyRepository::update($reply);
 
-            return back()->with('flash', 'Reply updated successfully');
-
+            return $this->responseForUpdateRequest();
         } catch (Throwable $e) {
             return back()->withErrors('Unable to update reply.');
         }
+    }
+
+    /**
+     * Return a JSON error response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorResponse(): JsonResponse
+    {
+        return response()->json(['error' => 'Unable to store reply'], 500);
+    }
+
+    /**
+     * Return a response for delete request.
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    protected function responseForDeleteRequest()
+    {
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply deleted']);
+        }
+
+        return back();
+    }
+
+    /**
+     * Return a response for update request.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function responseForUpdateRequest(): RedirectResponse
+    {
+        return back()->with('flash', 'Reply updated successfully');
     }
 }

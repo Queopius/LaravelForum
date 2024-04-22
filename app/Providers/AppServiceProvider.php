@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
         //Paginator::useBootstrapThree();
 
         resolve(EngineManager::class)->extend('mysql', function () {
-        return new MySqlSearchEngine;
-    });
+            return new MySqlSearchEngine;
+        });
     }
 
     /**

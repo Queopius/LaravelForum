@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
 use App\Http\Controllers\Replies\{
     BestRepliesController,
-    IndexRepliesController,
     CreateRepliesController,
     DestroyRepliesController,
+    IndexRepliesController,
     UpdateRepliesController,
 };
 use App\Http\Controllers\Threads\{

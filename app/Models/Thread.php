@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use App\Filters\ThreadFilters;
+use App\Traits\RecordsActivity;
 use App\Events\ThreadReceivedNewReply;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Database\Eloquent\{Builder, Model};
@@ -150,7 +151,7 @@ class Thread extends Model
     public function unsubscribe($userId = null)
     {
         $this->subscriptions()
-            ->where(['user_id' => $user ?? auth()->id()])
+            ->where(['user_id' => $userId ?? auth()->id()])
             ->delete();
     }
 
@@ -167,7 +168,7 @@ class Thread extends Model
     /**
      * Determine if the current user is subscribed to the thread.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSubscribedToAttribute()
     {

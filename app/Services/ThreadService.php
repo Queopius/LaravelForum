@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Repositories\ThreadRepository;
 
-class ThreadService
+final class ThreadService
 {
     /**
      * Create a new thread.
