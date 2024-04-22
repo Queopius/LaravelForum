@@ -2,7 +2,6 @@
 
 namespace App\Rules;
 
-use Zttp\Zttp;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -29,12 +28,6 @@ class Recaptcha implements Rule
         $body = json_decode($response->getBody());
 
         return $body->success;
-
-        /* return Zttp::asFormParams()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => config('services.recaptcha.secret'),
-            'response' => $value,
-            'remoteip' => request()->ip()
-        ])->json()['success']; */
     }
 
     /**
