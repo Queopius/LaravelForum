@@ -32,7 +32,7 @@ class ActivityTest extends TestCase
     }
 
     /** @test */
-    function it_records_activity_when_a_reply_is_created()
+    public function it_records_activity_when_a_reply_is_created()
     {
         $this->signIn();
 
@@ -42,7 +42,7 @@ class ActivityTest extends TestCase
     }
 
     /** @test */
-    function it_fetches_a_feed_for_any_user()
+    public function it_fetches_a_feed_for_any_user()
     {
         $this->signIn();
 

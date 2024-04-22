@@ -3,8 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Reply;
+use App\Models\{Reply, User};
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\{DatabaseMigrations, RefreshDatabase};
 
@@ -16,11 +15,11 @@ class FavoritesTest extends TestCase
     public function guests_cannot_favorite_anything()
     {
         $this->expectException(AuthenticationException::class);
-        
+
         $response = $this->post(
             'replies/' . Reply::factory()->create()->id . '/favorites'
         );
-            
+
         $response->assertRedirect('login');
     }
 

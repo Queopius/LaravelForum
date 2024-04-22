@@ -5,17 +5,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Rules\Recaptcha;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Testing\WithFaker;
 use App\Http\Requests\Thread\StoreThreadRequest;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{Activity, Channel, Reply, Thread, User};
 use App\Http\Controllers\Threads\CreateThreadsController;
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 
 class CreateThreadsTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
-    
+
     public function setUp(): void
     {
         parent::setUp();
@@ -28,7 +27,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function guests_may_not_create_threads()
+    public function guests_may_not_create_threads()
     {
         $this->expectException(AuthenticationException::class);
         $this->withoutExceptionHandling();
@@ -44,7 +43,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function new_users_must_first_confirm_their_email_address_before_creating_threads()
+    public function new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
         $user = User::factory()->create(['email_verified_at' => null]);
 
@@ -54,7 +53,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_authenticated_user_can_create_a_thread()
+    public function a_authenticated_user_can_create_a_thread()
     {
         $user = User::factory()->create();
         $channel = Channel::factory()->create();
@@ -78,12 +77,12 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_title()
+    public function a_thread_requires_a_title()
     {
         $this->handleValidationExceptions();
 
         $user = User::factory()->create();
-            
+
         $this->signIn($user)
             ->post(route('threads.store'), ['title' => ''])
             ->assertSessionHasErrors('title')
@@ -91,12 +90,12 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_body()
+    public function a_thread_requires_a_body()
     {
         $this->handleValidationExceptions();
 
         $user = User::factory()->create();
-            
+
         $this->signIn($user)
             ->post(route('threads.store'), [
                 'title' => 'Title',
@@ -107,12 +106,12 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_valid_channel()
+    public function a_thread_requires_a_valid_channel()
     {
         $this->handleValidationExceptions();
 
         $user = User::factory()->create();
-            
+
         $this->signIn($user)
             ->post(route('threads.store'), [
                 'title' => 'Title',
@@ -124,7 +123,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_recaptcha_verification()
+    public function a_thread_requires_recaptcha_verification()
     {
         $this->handleValidationExceptions();
 
@@ -132,7 +131,7 @@ class CreateThreadsTest extends TestCase
 
         $channel = Channel::factory()->create();
         $user = User::factory()->create();
-            
+
         $this->signIn($user)
             ->post(route('threads.store'), [
                 'title' => 'Title',
@@ -144,7 +143,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_thread_requires_a_unique_slug()
+    public function a_thread_requires_a_unique_slug()
     {
         $this->handleValidationExceptions();
 
@@ -153,7 +152,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = Thread::factory()->create(['title' => 'Foo Title']);
         $this->assertEquals($thread->slug, 'foo-title');
-        
+
         $request = new StoreThreadRequest([
             'title' => 'Foo Title',
             'body' => 'Thread body',
@@ -168,7 +167,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function unauthorized_users_may_not_delete_threads()
+    public function unauthorized_users_may_not_delete_threads()
     {
         $thread = Thread::factory()->create();
 
@@ -178,7 +177,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    function authorized_users_can_delete_threads()
+    public function authorized_users_can_delete_threads()
     {
         $this->signIn();
 

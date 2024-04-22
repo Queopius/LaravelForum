@@ -67,31 +67,6 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  StoreThreadRequest $request
-     * @return \Illuminate\Http\Response
-     */
-    /* public function store(StoreThreadRequest $request): Response
-    {
-        $request->validate([
-            'title' => 'required|spamfree',
-            'body' => 'required|spamfree',
-            'channel_id' => 'required|exists:channels,id',
-            'g-recaptcha-response' => ['required', $recaptcha]
-        ]);
-
-        $thread = Thread::create([
-            'user_id' => auth()->id(),
-            'channel_id' => $request->channel_id,
-            'title' => $request->title,
-            'body' => $request->body
-        ]);
-
-        return (new ThreadService)->createThread($request->validated());
-    } */
-
-    /**
      * Display the specified resource.
      *
      * @param  integer      $channel

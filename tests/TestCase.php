@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use App\Exceptions\Handler;
 use Illuminate\Support\Str;
 use App\Models\{Admin, User};
 use Illuminate\Testing\TestResponse;

@@ -15,7 +15,7 @@ class RegistrationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_confirmation_email_is_sent_upon_registration()
+    public function a_confirmation_email_is_sent_upon_registration()
     {
         Mail::fake();
 
@@ -30,7 +30,7 @@ class RegistrationTest extends TestCase
     }
 
     /** @test */
-    function user_can_fully_confirm_their_email_address()
+    public function user_can_fully_confirm_their_email_address()
     {
         Mail::fake();
 
@@ -63,7 +63,7 @@ class RegistrationTest extends TestCase
     }
 
     /** @test */
-    function confirming_an_invalid_token()
+    public function confirming_an_invalid_token()
     {
         $this->get(route('register.confirm', ['token' => 'invalid']))
             ->assertRedirect(route('threads'))

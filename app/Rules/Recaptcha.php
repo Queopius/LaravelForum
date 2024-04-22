@@ -17,7 +17,7 @@ class Recaptcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        $client = new Client();
+        $client = new Client;
         $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
             'form_params' => [
                 'secret' => config('services.recaptcha.secret'),
@@ -25,11 +25,11 @@ class Recaptcha implements Rule
                 'remoteip' => request()->ip()
             ]
         ]);
-        
+
         $body = json_decode($response->getBody());
 
         return $body->success;
-        
+
         /* return Zttp::asFormParams()->post('https://www.google.com/recaptcha/api/siteverify', [
             'secret' => config('services.recaptcha.secret'),
             'response' => $value,

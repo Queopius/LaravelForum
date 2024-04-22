@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Exceptions\ThrottleException;
 use App\Models\{Reply, Thread};
+use App\Exceptions\ThrottleException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +23,7 @@ class ParticipateInThreadsTest extends TestCase
         $this->post(Thread::factory()->create()->path() . '/replies', [
             'body' => 'I am an text body',
         ])->assertRedirect();
-        
+
         //->assertRedirect(route('login'));
     }
 
@@ -98,14 +98,14 @@ class ParticipateInThreadsTest extends TestCase
    public function replies_that_contain_spam_may_not_be_created()
     {
         $this->signIn();
-        
+
         $thread = Thread::factory()->create();
         $reply = Reply::factory()->make([
             'body' => 'Yahoo Customer Support'
         ]);
-        
+
         $this->expectException(ValidationException::class);
-        
+
         $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }

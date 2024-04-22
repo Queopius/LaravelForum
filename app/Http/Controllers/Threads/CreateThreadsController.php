@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Threads;
 
-use Illuminate\Http\RedirectResponse;
 use App\Services\ThreadService;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Thread\StoreThreadRequest;
 
 final class CreateThreadsController

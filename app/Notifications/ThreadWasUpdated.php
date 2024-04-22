@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Notification;
 
 class ThreadWasUpdated extends Notification

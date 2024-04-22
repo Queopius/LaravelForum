@@ -18,14 +18,14 @@ class LockThreadsTest extends TestCase
         $thread = Thread::factory()->create();
 
         $this->expectException(HttpException::class);
-        
+
         $this->post(route('locked-threads.store', $thread))
             ->assertStatus(403)
             ->assertFalse($thread->fresh()->locked);
     }
 
     /** @test */
-    public function administrators_can_lock_threads() 
+    public function administrators_can_lock_threads()
     {
         $this->withoutExceptionHandling();
 

@@ -24,21 +24,22 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    function has_a_path()
+    public function has_a_path()
     {
         $this->assertEquals(
-            "/threads/{$this->thread->channel->slug}/{$this->thread->slug}", $this->thread->path()
+            "/threads/{$this->thread->channel->slug}/{$this->thread->slug}",
+            $this->thread->path()
         );
     }
 
     /** @test */
-    function has_a_creator()
+    public function has_a_creator()
     {
         $this->assertInstanceOf(User::class, $this->thread->creator);
     }
 
     /** @test */
-    function has_a_replies()
+    public function has_a_replies()
     {
         Reply::factory()->create(['thread_id' => $this->thread]);
 
@@ -47,7 +48,7 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    function can_add_a_reply()
+    public function can_add_a_reply()
     {
         $this->thread->addReply([
             'user_id' => 1,
@@ -58,7 +59,7 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    function a_thread_notifies_all_registered_subscribers_when_a_reply_is_added()
+    public function a_thread_notifies_all_registered_subscribers_when_a_reply_is_added()
     {
         $this->signIn($user = User::factory()->create());
         $thread = Thread::factory()->create();
@@ -121,7 +122,7 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    function a_thread_can_check_if_the_authenticated_user_has_read_all_replies()
+    public function a_thread_can_check_if_the_authenticated_user_has_read_all_replies()
     {
         $this->signin(User::factory()->create());
         $thread = Thread::factory()->create();
@@ -138,7 +139,7 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    function is_sanitized_body_automatically()
+    public function is_sanitized_body_automatically()
     {
         $thread = Thread::factory()->make(['body' => '<script>alert("bad")</script><p>This is okay.</p>']);
 
