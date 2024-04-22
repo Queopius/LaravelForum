@@ -58,4 +58,22 @@ class ReplyService
             return back()->withErrors('Unable to delete reply.');
         }
     }
+
+    /**
+     * Update an existing reply.
+     *
+     * @param  Reply $reply
+     * @return 
+     */
+    public function update(Reply $reply)
+    {
+        try {
+            ReplyRepository::update($reply);
+
+            return back()->with('flash', 'Reply updated successfully');
+
+        } catch (Throwable $e) {
+            return back()->withErrors('Unable to update reply.');
+        }
+    }
 }

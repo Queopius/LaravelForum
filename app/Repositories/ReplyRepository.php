@@ -37,4 +37,18 @@ class ReplyRepository
     {
         $reply->delete();
     }
+
+    /**
+     * Update an existing reply.
+     *
+     * @param  Reply $reply
+     * 
+     * @return void
+     */
+    public static function update(Reply $reply): void
+    {
+        $reply->update(
+            request()->validate(['body' => 'required|spamfree'])
+        );
+    }
 }

@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
 use App\Http\Controllers\Replies\{
+    IndexRepliesController,
     CreateRepliesController,
     DestroyRepliesController,
+    UpdateRepliesController,
 };
 use App\Http\Controllers\Threads\{
     CreateThreadsController,
@@ -19,7 +21,6 @@ use App\Http\Controllers\{
     FavoritesController,
     HomeController,
     ProfilesController,
-    RepliesController,
     SearchController,
     UserNotificationsController
 };
@@ -75,7 +76,7 @@ Route::group(['prefix' => 'threads'], function () {
     /**
      * Routes Reply
      */
-    Route::get('{channel}/{thread}/replies', [RepliesController::class, 'index']);
+    Route::get('{channel}/{thread}/replies', [IndexRepliesController::class, 'index']);
     Route::post('{channel}/{thread}/replies', [CreateRepliesController::class, 'store'])
         ->name('replies.store');
     Route::get('{channel}', [ThreadsController::class, 'index'])
@@ -92,7 +93,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'replies/{reply}'], function (
         ->name('best-replies.store');
     Route::delete('', [DestroyRepliesController::class, 'destroy'])
         ->name('replies.destroy');
-    Route::patch('', [RepliesController::class, 'update']);
+    Route::patch('', [UpdateRepliesController::class, 'update']);
 });
 
 /**

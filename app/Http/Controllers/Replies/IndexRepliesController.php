@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
 
-use App\Models\{Reply, Thread};
+namespace App\Http\Controllers\Replies;
 
-class RepliesController extends Controller
+use App\Models\Thread;
+use App\Http\Controllers\Controller;
+
+final class IndexRepliesController extends Controller
 {
     /**
      * Create a new RepliesController instance.
@@ -23,17 +26,5 @@ class RepliesController extends Controller
     public function index($channelId, Thread $thread)
     {
         return $thread->replies()->paginate(20);
-    }
-
-    /**
-     * Update an existing reply.
-     *
-     * @param Reply $reply
-     */
-    public function update(Reply $reply)
-    {
-        $this->authorize('update', $reply);
-
-        $reply->update(request()->validate(['body' => 'required|spamfree']));
     }
 }
