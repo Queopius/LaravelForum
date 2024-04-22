@@ -15,7 +15,7 @@ class RegistrationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_confirmation_email_is_sent_upon_registration()
+    function a_confirmation_email_is_sent_upon_registration()
     {
         Mail::fake();
 
@@ -30,42 +30,43 @@ class RegistrationTest extends TestCase
     }
 
     /** @test */
-    public function user_can_fully_confirm_their_email_addresses()
+    function user_can_fully_confirm_their_email_address()
     {
-        $user = User::factory()->make();
-
-        $userData = [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => bcrypt('password123'),
-        ];
-
-        //dd($user->password);
-
         Mail::fake();
-        Mail::assertNothingSent();
 
-        //dd($user->toArray());
-        //$this->post(route('register'), $user->toArray());
-        $response = $this->post(route('register'), $userData);
-        dd($response->content());
+        $this->post(route('register'), [
+            'name' =>'John',
+            'email' => 'john@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
 
-        $user = User::firstWhere('email', $user->email);
+        $user = User::whereName('John')->first();
+
+        $this->assertTrue($user->confirmed == null);
+        $this->assertNotNull($user->confirmation_token == null);
 
         //Mail::hasSent($user, PleaseConfirmYourEmail::class);
-        Mail::assertSentTimes(1, PleaseConfirmYourEmail::class);
+        $this->get(route('register.confirm', ['token' => $user->confirmation_token]))
+            ->assertRedirect(route('threads'));
 
         tap($user->fresh(), function ($user) {
             $this->assertTrue($user->confirmed);
             $this->assertNull($user->confirmation_token);
+
+
+            /* tap($user->fresh(), function ($user) {
+                $this->assertTrue($user->confirmed);
+                $this->assertNull($user->confirmation_token);
+            }); */
         });
     }
 
-    // /** @test */
-    // function confirming_an_invalid_token()
-    // {
-    //     $this->get(route('register.confirm', ['token' => 'invalid']))
-    //         ->assertRedirect(route('threads'))
-    //         ->assertSessionHas('flash', 'Unknown token.');
-    // }
+    /** @test */
+    function confirming_an_invalid_token()
+    {
+        $this->get(route('register.confirm', ['token' => 'invalid']))
+            ->assertRedirect(route('threads'))
+            ->assertSessionHas('flash', 'Unknown token.');
+    }
 }

@@ -43,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'confirmed' => 'boolean',
     ];
 
     public function setPasswordAttribute($password)
@@ -90,6 +91,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function confirm()
+    {
+        $this->confirmed = true;
+
+        $this->confirmation_token = null;
+
+        $this->save();
     }
 
     /**

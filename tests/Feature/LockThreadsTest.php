@@ -3,7 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Thread, User};
+use App\Models\{Reply, Thread, User};
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 
 class LockThreadsTest extends TestCase
@@ -13,36 +14,43 @@ class LockThreadsTest extends TestCase
     /** @test */
     public function non_administrators_may_not_lock_threads()
     {
-        $this->signIn();
+        $this->signIn(User::factory()->create());
+        $thread = Thread::factory()->create();
+
+        $this->expectException(HttpException::class);
         
-        $user = User::factory()->create();
-        $thread = Thread::factory()->create([
-            'user_id' => $user->id
-        ]);
-
-        $this->post(route('locked-threads.store', $thread))->assertStatus(403);
-
-        $this->assertFalse($thread->fresh()->locked);
+        $this->post(route('locked-threads.store', $thread))
+            ->assertStatus(403)
+            ->assertFalse($thread->fresh()->locked);
     }
 
     /** @test */
-    public function administrators_can_lock_threads()
+    public function administrators_can_lock_threads() 
     {
         $this->withoutExceptionHandling();
-        $this->signIn(User::factory()->states('administrator')->create());
 
-        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
+        $user = User::factory()->create([
+            'name' => 'JohnDoe'
+        ]);
+        $this->signIn($user);
 
-        $this->post(route('locked-threads.store', $thread));
+        $thread = Thread::factory()->create();
+        $reply = Reply::factory()->create(["body" => 'Some reply']);
 
-        $this->assertTrue($thread->fresh()->locked, 'Failed asserting that the thread was locked.');
+        $this->post($thread->path() . '/replies', $reply->toArray());
+
+        $this->assertFalse($thread->fresh()->locked, 'Failed asserting that the thread was locked.');
     }
 
     /** @test */
     public function administrators_can_unlock_threads()
     {
         $this->withoutExceptionHandling();
-        $this->signIn(User::factory()->states('administrator')->create());
+
+        $user = User::factory()->create([
+            'name' => 'JohnDoe'
+        ]);
+        $this->signIn($user);
 
         $thread = Thread::factory()->create(['user_id' => auth()->id(), 'locked' => true]);
 

@@ -28,8 +28,8 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-            // 'confirmed' => true
+            'remember_token' => Str::random(10), 
+            'confirmed' => true
         ];
     }
 
@@ -42,7 +42,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'email_verified_at' => null,
+                'confirmed' => false,
             ];
         });
     }
@@ -54,7 +54,7 @@ class UserFactory extends Factory
      */
     public function administrator()
     {
-        return $this->states(User::class, 'administrator', function () {
+        return $this->state(function (array $attributes) {
             return [
                 'name' => 'JohnDoe',
             ];

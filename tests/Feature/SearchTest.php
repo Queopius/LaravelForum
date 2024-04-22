@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Thread;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -13,6 +14,7 @@ class SearchTest extends TestCase
     /** @test */
     public function a_user_can_search_threads()
     {
+        //$this->signIn(User::factory()->create());
         config(['scout.driver' => 'algolia']);
 
         Thread::factory()->count(2)->create([]);

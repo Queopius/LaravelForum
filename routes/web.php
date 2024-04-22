@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterConfirmationController;
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Threads\{
     ThreadsController,
@@ -102,6 +103,11 @@ Route::group(['prefix' => 'profiles/{user}'], function () {
     Route::delete('/notifications/{notification}', [UserNotificationsController::class, 'destroy'])
         ->middleware('auth');
 });
+
+/**
+ * Routes Registration
+ */
+Route::get('/register/confirm', [RegisterConfirmationController::class, 'index'])->name('register.confirm');
 /**
  * Routes Api Users
  */

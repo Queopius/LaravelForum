@@ -28,7 +28,9 @@ class UpdateThreadsTest extends TestCase
     /** @test */
     public function a_thread_requires_a_title_and_body_to_be_updated()
     {
-        $this->signIn();
+        $this->handleValidationExceptions();
+        
+        $this->signIn(User::factory()->create());
         $thread = $this->createTreadRelationUser();
 
         $this->patch($thread->path(), ['title' => 'Changed'])
@@ -59,7 +61,7 @@ class UpdateThreadsTest extends TestCase
         return Thread::factory()
             ->create(
                 [
-                    'user_id' => User::factory()->create()->id
+                    'user_id' => auth()->id()
                 ]
             );
     }
