@@ -8,6 +8,12 @@ use App\Repositories\ThreadRepository;
 
 class ThreadService
 {
+    /**
+     * Create a new thread.
+     *
+     * @param  array  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     */
     public function createThread($request)
     {
         try {
@@ -22,7 +28,9 @@ class ThreadService
 
         } catch (\Throwable $th) {
             return redirect()->route('threads.create')
-                ->withErrors(['thread_creation' => 'Failed to create thread. Please check your inputs and try again.'])
+                ->withErrors([
+                    'thread_creation' => 'Failed to create thread. Please check your inputs and try again.'
+                ])
                 ->withInput();
         }
     }
