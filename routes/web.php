@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
 use App\Http\Controllers\Replies\{
+    BestRepliesController,
     IndexRepliesController,
     CreateRepliesController,
     DestroyRepliesController,
@@ -17,7 +18,6 @@ use App\Http\Controllers\Threads\{
 use App\Http\Controllers\{
     Api\UserAvatarController,
     Api\UsersController,
-    BestRepliesController,
     FavoritesController,
     HomeController,
     ProfilesController,
