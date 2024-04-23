@@ -83,11 +83,6 @@ pipeline {
                 sh "./vendor/bin/phpunit --coverage-html ${buildDir}coverage --coverage-clover ${buildDir}coverage/clover.xml --coverage-crap4j ${buildDir}logs/crap4j.xml --log-junit ${buildDir}logs/junit.xml"
             }
         }
-        stage("Code analysis PDepend") {
-            steps {
-                sh "./vendor/bin/pdepend --jdepend-xml=${buildDir}logs/jdepend.xml --jdepend-chart=${buildDir}pdepend/dependencies.svg --overview-pyramid=${buildDir}pdepend/overview-pyramid.svg --ignore=vendor app"
-            }
-        }
         stage("Static code analysis larastan") {
             steps {
                 sh "./vendor/bin/phpstan analyse --memory-limit=2G"
