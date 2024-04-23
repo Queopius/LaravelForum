@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Replies;
 
 use App\Models\Reply;
-use App\Http\Controllers\Controller;
 use App\Services\ReplyService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-final class DestroyRepliesController extends Controller
+final class DestroyRepliesController
 {
+    use AuthorizesRequests;
+    
     /**
      * Delete the given reply.
      *
@@ -20,6 +22,6 @@ final class DestroyRepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        return (new ReplyService)->destroy($reply);
+        return app()->make(ReplyService::class)->destroy($reply);
     }
 }

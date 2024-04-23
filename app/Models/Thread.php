@@ -18,7 +18,7 @@ class Thread extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 
@@ -178,7 +178,7 @@ class Thread extends Model
     }
 
     /**
-     * @param array $reply
+     * @param mixed $reply
      */
     public function notifySubscribers($reply): void
     {
@@ -196,9 +196,7 @@ class Thread extends Model
      */
     public function hasUpdatesFor($user)
     {
-        $key = $user->visitedThreadCacheKey($this);
-
-        return $this->updated_at > cache($key);
+        return $this->updated_at > cache()->get($user->visitedThreadCacheKey($this));
     }
 
     /**

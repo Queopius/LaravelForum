@@ -8,21 +8,34 @@ use Throwable;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\ReplyRepository;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Reply\CreateRepliesRequest;
-use Illuminate\Http\Response;
+use App\Repositories\Interface\ReplyRepositoryInterface;
 
 final class ReplyService
 {
     /**
+     * @var ReplyRepositoryInterface
+     */
+    protected $replyRepository;
+
+    /**
+     * Constructor de la clase.
+     *
+     * @param ReplyRepositoryInterface $replyRepository
+     */
+    public function __construct(ReplyRepositoryInterface $replyRepository)
+    {
+        $this->replyRepository = $replyRepository;
+    }
+
+    /**
      * Persist a new reply.
      * 
-     * @param  int                  $channelId
-     * @param  Thread               $thread
-     * @param  CreateRepliesRequest $form
+     * @param  \App\Models\Thread               $thread
+     * @param  \App\Http\Requests\Reply\CreateRepliesRequest $form
      * 
-     * @return \Illuminate\Http\Response|\Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function store(Thread $thread, CreateRepliesRequest $form)
     {
@@ -31,7 +44,7 @@ final class ReplyService
                 return response('Thread is locked', 422);
             }
 
-            return ReplyRepository::create($thread, $form);
+            return $this->replyRepository->create($thread, $form);
 
         } catch (Throwable $e) {
             return response()->json(['error' => 'Unable to store reply'], 500);
@@ -48,7 +61,7 @@ final class ReplyService
     public function destroy(Reply $reply)
     {
         try {
-            ReplyRepository::delete($reply);
+            $this->replyRepository->delete($reply);
 
             return $this->responseForDeleteRequest();
         } catch (Throwable $e) {
@@ -65,7 +78,7 @@ final class ReplyService
     public function update(Reply $reply)
     {
         try {
-            ReplyRepository::update($reply);
+            $this->replyRepository->update($reply);
 
             return $this->responseForUpdateRequest();
         } catch (Throwable $e) {

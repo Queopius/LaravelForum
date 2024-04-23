@@ -15,7 +15,7 @@ class Reply extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 

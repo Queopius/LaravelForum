@@ -6,10 +6,12 @@ namespace App\Http\Controllers\Replies;
 
 use App\Models\Reply;
 use App\Services\ReplyService;
-use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-final class UpdateRepliesController extends Controller
+final class UpdateRepliesController
 {
+    use AuthorizesRequests;
+
     /**
      * Delete the given reply.
      *
@@ -20,6 +22,6 @@ final class UpdateRepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        return (new ReplyService)->update($reply);
+        return app()->make(ReplyService::class)->update($reply);
     }
 }

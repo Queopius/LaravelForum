@@ -4,19 +4,19 @@ namespace App\Repositories;
 
 use App\Models\Reply;
 use App\Models\Thread;
-use Illuminate\Database\Eloquent\Model;
+use App\Repositories\Interface\ReplyRepositoryInterface;
 
-class ReplyRepository
+class EloquentReplyRepository implements ReplyRepositoryInterface
 {
     /**
      * Create a new reply for the given thread.
      *
-     * @param  Model  $thread
+     * @param  Thread $thread
      * @param  object $form
      * 
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public static function create(Thread $thread, $form)
+    public function create($thread, $form)
     {
         return $thread->addReply(
             [
@@ -33,7 +33,7 @@ class ReplyRepository
      * 
      * @return void
     */
-    public static function delete(Reply $reply)
+    public function delete($reply)
     {
         $reply->delete();
     }
@@ -45,7 +45,7 @@ class ReplyRepository
      * 
      * @return void
      */
-    public static function update(Reply $reply): void
+    public function update($reply): void
     {
         $reply->update(
             request()->validate(['body' => 'required|spamfree'])

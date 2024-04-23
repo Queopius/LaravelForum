@@ -12,7 +12,7 @@ class ThreadSubscription extends Model
     /**
      * The attributes that aren't mass assignable.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 
@@ -39,7 +39,7 @@ class ThreadSubscription extends Model
     /**
      * Notify the related user that the thread was updated.
      *
-     * @param \App\Reply $reply
+     * @param \App\Models\Reply $reply
      */
     public function notify($reply)
     {

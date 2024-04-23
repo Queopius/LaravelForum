@@ -7,24 +7,26 @@ namespace App\Http\Controllers\Replies;
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Services\ReplyService;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Reply\CreateRepliesRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-final class CreateRepliesController extends Controller
+final class CreateRepliesController
 {
+    use AuthorizesRequests;
+
     /**
      * Persist a new reply.
      * 
-     * @param  int                  $channelId
-     * @param  Thread               $thread
-     * @param  CreateRepliesRequest $form
+     * @param  int|null             $channelId
+     * @param  \App\Models\Thread   $thread
+     * @param  \App\Http\Requests\Reply\CreateRepliesRequest $form
      * 
-     * @return \Illuminate\Http\Response|\Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function store($channelId, Thread $thread, CreateRepliesRequest $form)
     {
         $this->authorize('create', Reply::class);
 
-        return (new ReplyService)->store($thread, $form);
+        return app()->make(ReplyService::class)->store($thread, $form);
     }
 }

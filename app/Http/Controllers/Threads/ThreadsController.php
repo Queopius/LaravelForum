@@ -19,10 +19,11 @@ class ThreadsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \App\Models\Channel      $channel
-     * @param \App\Models\ThreadFilters $filters
-     * @param \App\Models\Trending $trending
-     * @return \Illuminate\Http\Response
+     * @param \App\Models\Channel        $channel
+     * @param \App\Models\Trending       $trending
+     * @param \App\Filters\ThreadFilters $filters
+     * 
+     * @return \Illuminate\View\View
      */
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
@@ -42,7 +43,8 @@ class ThreadsController extends Controller
      * Fetch all relevant threads.
      *
      * @param \App\Models\Channel       $channel
-     * @param \App\Models\ThreadFilters $filters
+     * @param \App\Filters\ThreadFilters $filters
+     * 
      * @return mixed
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
@@ -59,7 +61,7 @@ class ThreadsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -72,7 +74,8 @@ class ThreadsController extends Controller
      * @param  int                 $channel
      * @param  \App\Models\Thread  $thread
      * @param \App\Models\Trending $trending
-     * @return \Illuminate\Http\Response
+     * 
+     * @return \Illuminate\View\View
      */
     public function show($channel, Thread $thread, Trending $trending)
     {

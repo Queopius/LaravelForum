@@ -9,7 +9,7 @@ class Activity extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 
@@ -28,7 +28,8 @@ class Activity extends Model
      *
      * @param  User $user
      * @param  int  $take
-     * @return \Illuminate\Database\Eloquent\Collection;
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection<int|string>;
      */
     public static function feed(User $user, $take = 50)
     {
@@ -41,6 +42,6 @@ class Activity extends Model
                 function ($activity) {
                 return $activity->created_at->format('Y-m-d');
             }
-            );
+        );
     }
 }

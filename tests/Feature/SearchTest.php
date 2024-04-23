@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Thread, User};
+use App\Models\Thread;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SearchTest extends TestCase
@@ -13,24 +13,20 @@ class SearchTest extends TestCase
     /** @test */
     public function a_user_can_search_threads()
     {
-        //$this->signIn(User::factory()->create());
         config(['scout.driver' => 'algolia']);
 
+        $search = 'foobar';
+
         Thread::factory()->count(2)->create([]);
-        Thread::factory()->count(1)->create([
-            'body' => 'A thread with the foobar term.'
+        Thread::factory()->count(2)->create([
+            'body' => 'A thread with the {$search} term.'
         ]);
-        Thread::factory()->count(1)->create([
-            'body' => 'A thread with the foobar term.'
-        ]);
-        /* create(Thread::class, [], 2);
-        create(Thread::class, ['body' => 'A thread with the foobar term.'], 2); */
 
         do {
             // Account for latency.
-            sleep(.25);
+            sleep(.20);
 
-            $results = $this->getJson('/threads/search?q=foobar')->json()['data'];
+            $results = $this->getJson('/threads/search?q={$search}')->json()['data'];
         } while (empty($results));
 
         $this->assertCount(2, $results);

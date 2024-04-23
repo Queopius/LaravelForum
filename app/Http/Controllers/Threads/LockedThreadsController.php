@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Threads;
 
 use App\Models\Thread;
 use Illuminate\Routing\Controller;
-use Illuminate\Http\{Request, Response};
 
 class LockedThreadsController extends Controller
 {
     /**
      * Lock the given thread.
      *
-     * @param \App\Thread $thread
+     * @param \App\Models\Thread $thread
      */
     public function store(Thread $thread)
     {
@@ -21,7 +20,7 @@ class LockedThreadsController extends Controller
     /**
      * Unlock the given thread.
      *
-     * @param \App\Thread $thread
+     * @param \App\Models\Thread $thread
      */
     public function destroy(Thread $thread)
     {

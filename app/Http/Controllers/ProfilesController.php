@@ -10,7 +10,8 @@ class ProfilesController extends Controller
      * Show the user's profile.
      *
      * @param  User $user
-     * @return \Response
+     * 
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(User $user)
     {
