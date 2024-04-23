@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Providers;
 
 use App\Events\ThreadReceivedNewReply;
@@ -33,7 +34,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }

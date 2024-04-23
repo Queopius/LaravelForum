@@ -2,13 +2,11 @@
 
 namespace Tests;
 
-use App\Exceptions\Handler;
-use Illuminate\Support\Str;
-use App\Models\{Admin, User};
+use App\Models\User;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-use Illuminate\Foundation\Testing\{Artisan, RefreshDatabase, TestCase as BaseTestCase};
+use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase as BaseTestCase};
 
 abstract class TestCase extends BaseTestCase
 {
@@ -54,17 +52,6 @@ abstract class TestCase extends BaseTestCase
     public function be(UserContract $user, $driver = null)
     {
         $this->app['auth']->guard($driver)->setUser($user);
-    }
-
-    protected function assertDatabaseEmpty($table, $connection = null)
-    {
-        $total = $this->getConnection($connection)->table($table)->count();
-        $this->assertSame(0, $total, sprintf(
-            "Failed asserting the table [%s] is empty. %s %s found.",
-            $table,
-            $total,
-            Str::plural('row', $total)
-        ));
     }
 
     protected function tearDown(): void

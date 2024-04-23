@@ -16,7 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'name',
@@ -43,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'confirmed' => 'boolean',
     ];
 
     public function setPasswordAttribute($password)
@@ -92,6 +93,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Activity::class);
     }
 
+    public function confirm()
+    {
+        $this->confirmed = true;
+
+        $this->confirmation_token = null;
+
+        $this->save();
+    }
+
     /**
      * Determine if the user is an administrator.
      *
@@ -136,5 +146,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function visitedThreadCacheKey($thread)
     {
         return sprintf("users.%s.visits.%s", $this->id, $thread->id);
+    }
+
+    /**
+     * Returns the user's unread notifications.
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
     }
 }

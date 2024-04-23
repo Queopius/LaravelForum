@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Thread, User};
+use App\Models\{Reply, Thread, User};
 use App\Models\DatabaseNotificationUser;
 
 class NotificationsTest extends TestCase
@@ -40,9 +40,20 @@ class NotificationsTest extends TestCase
     /** @test */
     public function a_user_can_fetch_their_unread_notifications()
     {
-        DatabaseNotificationUser::factory()->create();
+        $this->withoutExceptionHandling();
 
-        $this->assertCount(1, $this->getJson("/profiles/" . auth()->user()->name . "/notifications")->json());
+        $thread = Thread::factory()->create()->subscribe();
+
+        $thread->addReply([
+            'user_id' => User::factory()->create()->id,
+            'body' => 'Some reply'
+        ]);
+
+        $user = auth()->user();
+
+        $response = $this->getJson("/profiles/{$user->name}/notifications")->json();
+
+        $this->assertCount(1, $response);
     }
 
     /** @test */

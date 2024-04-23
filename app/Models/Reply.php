@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\{Favoritable, RecordsActivity};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reply extends Model
@@ -13,7 +15,7 @@ class Reply extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 
@@ -142,6 +144,6 @@ class Reply extends Model
      */
     public function getBodyAttribute($body)
     {
-        return \Purify::clean($body);
+        return Purify::clean($body);
     }
 }
