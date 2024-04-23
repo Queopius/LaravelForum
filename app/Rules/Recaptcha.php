@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use Zttp\Zttp;
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Validation\Rule;
 
 class Recaptcha implements Rule
@@ -16,11 +16,18 @@ class Recaptcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Zttp::asFormParams()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => config('services.recaptcha.secret'),
-            'response' => $value,
-            'remoteip' => request()->ip()
-        ])->json()['success'];
+        $client = new Client;
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret' => config('services.recaptcha.secret'),
+                'response' => $value,
+                'remoteip' => request()->ip()
+            ]
+        ]);
+
+        $body = json_decode($response->getBody());
+
+        return $body->success;
     }
 
     /**
@@ -30,6 +37,6 @@ class Recaptcha implements Rule
      */
     public function message()
     {
-        return 'The recaptcha verification failed. Try again.';
+        return 'The Recaptcha verification failed. Please try again.';
     }
 }

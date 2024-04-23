@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Traits;
 
+use App\Models\Favorite;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Favoritable
 {
@@ -21,7 +23,7 @@ trait Favoritable
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function favorites()
+    public function favorites(): MorphMany
     {
         return $this->morphMany(Favorite::class, 'favorited');
     }
@@ -29,35 +31,35 @@ trait Favoritable
     /**
      * Favorite the current reply.
      *
-     * @return Model
+     * @return Model|null
      */
-    public function favorite()
+    public function favorite(): ?Model
     {
-        $attributes = ['user_id' => auth()->id()];
-
-        if (! $this->favorites()->where($attributes)->exists()) {
-            return $this->favorites()->create($attributes);
+        if (! $this->isFavorited()) {
+            return $this->favorites()->create(['user_id' => auth()->id()]);
         }
+
+        return null;
     }
 
     /**
      * Unfavorite the current reply.
+     *
+     * @return void
      */
-    public function unfavorite()
+    public function unfavorite(): void
     {
-        $attributes = ['user_id' => auth()->id()];
-
-        $this->favorites()->where($attributes)->get()->each->delete();
+        $this->favorites()->where('user_id', auth()->id())->get()->each->delete();
     }
 
     /**
      * Determine if the current reply has been favorited.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isFavorited()
+    public function isFavorited(): bool
     {
-        return ! ! $this->favorites->where('user_id', auth()->id())->count();
+        return (bool) $this->favorites->where('user_id', auth()->id())->count();
     }
 
     /**
@@ -65,7 +67,7 @@ trait Favoritable
      *
      * @return bool
      */
-    public function getIsFavoritedAttribute()
+    public function getIsFavoritedAttribute(): bool
     {
         return $this->isFavorited();
     }
@@ -73,9 +75,9 @@ trait Favoritable
     /**
      * Get the number of favorites for the reply.
      *
-     * @return integer
+     * @return int
      */
-    public function getFavoritesCountAttribute()
+    public function getFavoritesCountAttribute(): int
     {
         return $this->favorites->count();
     }

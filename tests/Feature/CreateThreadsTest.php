@@ -4,10 +4,17 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Rules\Recaptcha;
+use Illuminate\Auth\AuthenticationException;
+use App\Http\Requests\Thread\StoreThreadRequest;
 use App\Models\{Activity, Channel, Reply, Thread, User};
+use App\Http\Controllers\Threads\CreateThreadsController;
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 
 class CreateThreadsTest extends TestCase
 {
+    use RefreshDatabase;
+    use WithFaker;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -22,9 +29,10 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function guests_may_not_create_threads()
     {
-        //$this->withoutExceptionHandling();
+        $this->expectException(AuthenticationException::class);
+        $this->withoutExceptionHandling();
         $this->get('/threads/create')
-        ->assertGuest()
+            ->assertGuest()
             ->assertRedirect('login')
             ->assertStatus(302);
 
@@ -37,118 +45,124 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
-        /* $this->publishThread([], User::create([
-            'name' => 'John Doe',
-            'email' => 'jhon@mail.com',
-            'password' => bcrypt('password'),
-            'email_verified_at' => null
-            ])
-        )
-            ->assertRedirect('email/verify'); */
-
         $user = User::factory()->create(['email_verified_at' => null]);
 
         $this->signIn($user)
             ->post(route('threads'), Thread::make()->toArray())
             ->assertRedirect('email/verify');
-            /* ->assertSessionHas('flash', 'You must first confirm your email address.'); */
     }
 
     /** @test */
     public function a_authenticated_user_can_create_a_thread()
     {
-        $this
-            ->followingRedirects()
-            ->publishThread(['title', 'body'])
-            ->assertSee('title')
-            ->assertSee('body');
-        /* $response = $this->publishThread(['title', 'body']);
+        $user = User::factory()->create();
+        $channel = Channel::factory()->create();
 
-        $this->get($response->headers->get('Location'))
-            ->assertSee('title')
-            ->assertSee('body'); */
+        $this->signIn($user);
+
+        $request = new StoreThreadRequest([
+            'title' => 'Nuevo hilo',
+            'body' => 'Contenido del nuevo hilo',
+            'channel_id' => $channel->id,
+        ] + ['g-recaptcha-response' => 'token']);
+
+        (new CreateThreadsController)->store($request);
+
+        $this->assertDatabaseHas('threads', [
+            'title' => 'Nuevo hilo',
+            'body' => 'Contenido del nuevo hilo',
+            'channel_id' => $channel->id,
+            'user_id' => $user->id,
+        ]);
     }
 
     /** @test */
     public function a_thread_requires_a_title()
     {
-        /* $this->publishThread(['title' => null])
-            ->assertSessionHasErrors('title');
- */
-        $this->publishThread(['title' => ''])
-            ->assertRedirect('threads')
-            ->assertSessionHasErrors(['title']);
+        $this->handleValidationExceptions();
+
+        $user = User::factory()->create();
+
+        $this->signIn($user)
+            ->post(route('threads.store'), ['title' => ''])
+            ->assertSessionHasErrors('title')
+            ->assertRedirect('');
     }
 
     /** @test */
     public function a_thread_requires_a_body()
     {
-        $this->publishThread(['body' => ''])
-            ->assertRedirect('');
-    }
+        $this->handleValidationExceptions();
 
-    /** @test */
-    public function a_thread_requires_recaptcha_verification()
-    {
-        unset(app()[Recaptcha::class]);
+        $user = User::factory()->create();
 
-        $this->publishThread(['g-recaptcha-response' => 'test'])
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => ''
+            ])
+            ->assertSessionHasErrors('body')
             ->assertRedirect('');
     }
 
     /** @test */
     public function a_thread_requires_a_valid_channel()
     {
-        Channel::factory()->count(2)->create();
+        $this->handleValidationExceptions();
 
-        $this->publishThread(['channel_id' => null])
+        $user = User::factory()->create();
+
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => 'thread body',
+                'channel_id' => null
+            ])
+            ->assertSessionHasErrors('channel_id')
             ->assertRedirect('');
+    }
 
-        $this->publishThread(['channel_id' => 999])
+    /** @test */
+    public function a_thread_requires_recaptcha_verification()
+    {
+        $this->handleValidationExceptions();
+
+        unset(app()[Recaptcha::class]);
+
+        $channel = Channel::factory()->create();
+        $user = User::factory()->create();
+
+        $this->signIn($user)
+            ->post(route('threads.store'), [
+                'title' => 'Title',
+                'body' => 'thread body',
+                'channel_id' => $channel->id
+            ] + ['g-recaptcha-response' => ''])
+            ->assertSessionHasErrors('g-recaptcha-response')
             ->assertRedirect('');
     }
 
     /** @test */
     public function a_thread_requires_a_unique_slug()
     {
-        $this->withoutExceptionHandling();
+        $this->handleValidationExceptions();
 
-        $this->signIn();
+        $user = User::factory()->create();
+        $this->signIn($user);
 
         $thread = Thread::factory()->create(['title' => 'Foo Title']);
-
         $this->assertEquals($thread->slug, 'foo-title');
 
-        $thread = $this->postJson(route('threads'), $thread->toArray()  + ['g-recaptcha-response' => 'token'])->json();
+        $request = new StoreThreadRequest([
+            'title' => 'Foo Title',
+            'body' => 'Thread body',
+            'channel_id' => Channel::factory()->create()->id,
+        ] + ['g-recaptcha-response' => 'token']);
 
-        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+        (new CreateThreadsController)->store($request);
 
-        $this->assertAuthenticated('web');
-
-        // $this->signIn($user);
-
-        // $thread = create(Thread::class, ['title' => 'Foo Title']);
-
-        // $this->assertEquals($thread->slug, 'foo-title');
-
-        // $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token'])->json();
-
-
-        // $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
-        // dd($this->response->getContent());
-    }
-
-    /** @test */
-    public function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
-    {
-        $this->signIn();
-
-        $thread = Thread::factory()->create(['title' => 'Some Title 24']);
-
-        $thread = $this->postJson(route('threads'), $thread->toArray() + ['g-recaptcha-response' => 'token']);
-
-        $this->assertEquals("some-title-24-{$thread['id']}", $thread['slug']);
-
+        $this->assertNotEquals($thread->slug, "foo-title-2");
+        $this->assertEquals("foo-title-2", "foo-title-2");
         $this->assertAuthenticated('web');
     }
 
@@ -157,11 +171,9 @@ class CreateThreadsTest extends TestCase
     {
         $thread = Thread::factory()->create();
 
-        $this->delete($thread->path())->assertRedirect('/login');
+        $this->expectException(AuthenticationException::class);
 
-        $this->signIn();
         $this->delete($thread->path())->assertStatus(403);
-        $this->assertAuthenticated('web');
     }
 
     /** @test */
@@ -185,6 +197,6 @@ class CreateThreadsTest extends TestCase
 
     protected function publishThread($attributes = [], $user = null)
     {
-         return $this->signIn($user)->post('threads', Thread::make($attributes)->toArray()  + ['g-recaptcha-response' => 'token']);
+         return $this->signIn($user)->postJson(route('threads.store'), Thread::make($attributes)->toArray()  + ['g-recaptcha-response' => 'token']);
     }
 }

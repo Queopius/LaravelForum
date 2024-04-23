@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,7 +13,7 @@ class Favorite extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 

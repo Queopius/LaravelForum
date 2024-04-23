@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Replies;
 
 use App\Models\Reply;
+use App\Http\Controllers\Controller;
 
-class BestRepliesController extends Controller
+final class BestRepliesController extends Controller
 {
     /**
      * Mark the best reply for a thread.

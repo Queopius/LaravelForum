@@ -3,7 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Reply;
+use App\Models\{Reply, User};
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\{DatabaseMigrations, RefreshDatabase};
 
 class FavoritesTest extends TestCase
@@ -13,14 +14,13 @@ class FavoritesTest extends TestCase
     /** @test */
     public function guests_cannot_favorite_anything()
     {
-        $this->actingAsUser();
-        $this->post('replies/' . Reply::factory()->create()->id . '/favorites')->assertRedirect('login');
+        $this->expectException(AuthenticationException::class);
 
+        $response = $this->post(
+            'replies/' . Reply::factory()->create()->id . '/favorites'
+        );
 
-        /* $this->withExceptionHandling() */
-            /* $this->post('replies/1/favorites')
-            ->assertRedirect('/login'); */
-
+        $response->assertRedirect('login');
     }
 
     /** @test */
@@ -40,7 +40,7 @@ class FavoritesTest extends TestCase
     {
         $this->signIn();
 
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         $reply->favorite();
 
@@ -54,7 +54,7 @@ class FavoritesTest extends TestCase
     {
         $this->signIn();
 
-        $reply = create(Reply::class);
+        $reply = Reply::factory()->create();
 
         try {
             $this->post('replies/' . $reply->id . '/favorites');

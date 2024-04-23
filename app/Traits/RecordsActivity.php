@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Traits;
 
-
+use App\Models\Activity;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait RecordsActivity
 {
@@ -29,7 +30,7 @@ trait RecordsActivity
      *
      * @return array
      */
-    protected static function getActivitiesToRecord()
+    protected static function getActivitiesToRecord(): array
     {
         return ['created'];
     }
@@ -39,7 +40,7 @@ trait RecordsActivity
      *
      * @param string $event
      */
-    protected function recordActivity($event)
+    protected function recordActivity($event): void
     {
         $this->activity()->create([
             'user_id' => auth()->id(),
@@ -52,7 +53,7 @@ trait RecordsActivity
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function activity()
+    public function activity(): MorphMany
     {
         return $this->morphMany(Activity::class, 'subject');
     }
@@ -63,9 +64,9 @@ trait RecordsActivity
      * @param  string $event
      * @return string
      */
-    protected function getActivityType($event)
+    protected function getActivityType($event): string
     {
-        $type = strtolower((new \ReflectionClass($this))->getShortName());
+        $type = strtolower(class_basename($this));
 
         return "{$event}_{$type}";
     }

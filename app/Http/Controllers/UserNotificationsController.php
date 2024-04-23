@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+
 class UserNotificationsController extends Controller
 {
     /**
@@ -19,7 +21,7 @@ class UserNotificationsController extends Controller
      */
     public function index()
     {
-        return auth()->user()->unreadNotifications;
+        return new JsonResponse(auth()->user()->unreadNotifications);
     }
 
     /**
