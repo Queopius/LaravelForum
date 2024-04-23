@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 final class DestroyRepliesController
 {
     use AuthorizesRequests;
-    
+
     /**
      * Delete the given reply.
      *

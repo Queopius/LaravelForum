@@ -44,7 +44,7 @@ trait Favoritable
 
     /**
      * Unfavorite the current reply.
-     * 
+     *
      * @return void
      */
     public function unfavorite(): void

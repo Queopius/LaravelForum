@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Throwable;
-use App\Models\Reply;
-use App\Models\Thread;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use App\Models\{Reply, Thread};
 use App\Http\Requests\Reply\CreateRepliesRequest;
+use Illuminate\Http\{JsonResponse, RedirectResponse};
 use App\Repositories\Interface\ReplyRepositoryInterface;
 
 final class ReplyService
@@ -31,10 +29,10 @@ final class ReplyService
 
     /**
      * Persist a new reply.
-     * 
+     *
      * @param  \App\Models\Thread               $thread
      * @param  \App\Http\Requests\Reply\CreateRepliesRequest $form
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function store(Thread $thread, CreateRepliesRequest $form)
@@ -55,7 +53,7 @@ final class ReplyService
      * Delete the given reply.
      *
      * @param Reply $reply
-     * 
+     *
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function destroy(Reply $reply)

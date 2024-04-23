@@ -2,8 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Reply;
-use App\Models\Thread;
+use App\Models\{Reply, Thread};
 use App\Repositories\Interface\ReplyRepositoryInterface;
 
 class EloquentReplyRepository implements ReplyRepositoryInterface
@@ -13,7 +12,7 @@ class EloquentReplyRepository implements ReplyRepositoryInterface
      *
      * @param  Thread $thread
      * @param  object $form
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function create($thread, $form)
@@ -30,7 +29,7 @@ class EloquentReplyRepository implements ReplyRepositoryInterface
      * Delete the given reply.
      *
      * @param  Reply $reply
-     * 
+     *
      * @return void
     */
     public function delete($reply)
@@ -42,7 +41,7 @@ class EloquentReplyRepository implements ReplyRepositoryInterface
      * Update an existing reply.
      *
      * @param  Reply $reply
-     * 
+     *
      * @return void
      */
     public function update($reply): void

@@ -22,7 +22,7 @@ class ThreadsController extends Controller
      * @param \App\Models\Channel        $channel
      * @param \App\Models\Trending       $trending
      * @param \App\Filters\ThreadFilters $filters
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
@@ -44,7 +44,7 @@ class ThreadsController extends Controller
      *
      * @param \App\Models\Channel       $channel
      * @param \App\Filters\ThreadFilters $filters
-     * 
+     *
      * @return mixed
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
@@ -74,7 +74,7 @@ class ThreadsController extends Controller
      * @param  int                 $channel
      * @param  \App\Models\Thread  $thread
      * @param \App\Models\Trending $trending
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function show($channel, Thread $thread, Trending $trending)

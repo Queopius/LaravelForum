@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\{Reply, Thread, User};
-use App\Notifications\ThreadWasUpdated;
 use App\Models\DatabaseNotificationUser;
 
 class NotificationsTest extends TestCase

@@ -2,18 +2,18 @@
 
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Http\Controllers\Auth\RegisterConfirmationController;
+use App\Http\Controllers\Threads\{
+    CreateThreadsController,
+    LockedThreadsController,
+    ThreadSubscriptionsController,
+    ThreadsController,
+};
 use App\Http\Controllers\Replies\{
     BestRepliesController,
     CreateRepliesController,
     DestroyRepliesController,
     IndexRepliesController,
     UpdateRepliesController,
-};
-use App\Http\Controllers\Threads\{
-    CreateThreadsController,
-    LockedThreadsController,
-    ThreadSubscriptionsController,
-    ThreadsController,
 };
 use App\Http\Controllers\{
     Api\UserAvatarController,
