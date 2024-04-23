@@ -12,12 +12,10 @@
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
-    <source>
+    <coverage pathCoverage="true" cacheDirectory="build/phpunit/cache">
         <include>
             <directory suffix=".php">./app</directory>
         </include>
-    </source>
-    <coverage pathCoverage="true" cacheDirectory="build/phpunit/cache">
         <report>
             <html outputDirectory="build/coverage"/>
             <clover outputFile="build/logs/clover.xml"/>
