@@ -27,7 +27,7 @@
         <junit outputFile="build/logs/junit.xml" />
     </logging>
     <php>
-        <ini name="display_errors" value="coverage"/>
+        <ini name="xdebug.mode" value="coverage"/>
         <server name="APP_ENV" value="testing"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
