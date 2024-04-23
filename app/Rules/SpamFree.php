@@ -5,18 +5,15 @@ namespace App\Rules;
 use App\Inspections\Spam;
 use Illuminate\Contracts\Validation\Rule;
 
-class SpamFree Implements Rule 
+class SpamFree implements Rule
 {
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
-    
+    public function __construct() {}
+
     /**
      * Determine if the given attribute passes our spam validation.
      *

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\{Thread, Reply, User};
-use App\Policies\{ThreadPolicy, ReplyPolicy, UserPolicy};
+use App\Models\{Reply, Thread, User};
+use App\Policies\{ReplyPolicy, ThreadPolicy, UserPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

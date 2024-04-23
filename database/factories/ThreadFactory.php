@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Support\Str;
-use App\Models\{Thread, User, Channel};
+use App\Models\{Channel, Thread, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ThreadFactory extends Factory
@@ -30,7 +30,8 @@ class ThreadFactory extends Factory
             'title' => $title,
             'body'  => $this->faker->paragraph(),
             'visits' => 0,
-            'slug' => Str::slug($title),
+            'slug' => $title,
+            //'slug' => Str::slug($title),
             'locked' => false
         ];
     }

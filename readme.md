@@ -1,40 +1,105 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+  <a href="https://github.com/Queopius">
+    <img src="public/svg/forum-oficial.png" alt="Queopius Laravel / Developer">
+  </a>
 </p>
 
-## About Laravel
+<p align="center">
+    <a href="https://github.com/Queopius/framework/forum">
+        <img src="https://github.com/Queopius/forum/actions/workflows/test.yml/badge.svg" alt="Build Status">
+    </a>
+    <a href="https://github.com/Queopius/framework/forum">
+        <img src="https://github.com/Queopius/forum/actions/workflows/pint.yml/badge.svg" alt="Build Status">
+    </a>
+    <a href="https://github.com/Queopius/framework/forum">
+        <img src="https://github.com/Queopius/forum/actions/workflows/phpstan.yml/badge.svg" alt="Build Status">
+    </a>
+</p> 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+# Forum
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+A simple forum application built with Laravel.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+### Description
+Forum is a web application where users can create threads, post replies, and engage in discussions on various topics.
 
-## Learning Laravel
+### Requirements
+- Laravel 8 (for default)
+- PHP 8.0
+- Composer
+- Redis
+- Algolia account (for search functionality)
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+### Installation
+1. **Clone the repository in SSH:**
+```bash
+git clone git@github.com:Queopius/forum.git
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+2. Navigate to the project directory:
+```bash
+cd forum
+```
 
-## Contributing
+3. Install composer dependencies:
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+4. Copy the example environment file:
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+5. Generate application key:
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+6. Configure the database connection in the .env file.
+7. Configure Redis connection in the .env file:
+```bash
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
 
-## License
+8. Configure Algolia credentials in the .env file:
+```bash
+ALGOLIA_APP_ID=your_app_id
+ALGOLIA_SECRET=your_secret
+ALGOLIA_SEARCH=your_search_key
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+9. Run migrations to create the database tables and Seeders:
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+10. Serve the application:
+```bash
+php artisan serve
+```
+
+11. Access the application in your web browser at http://localhost:8000.
+
+### Running Tests
+* PHPUnit: Run PHPUnit tests with the following command:
+```bash
+./vendor/bin/phpunit
+```
+
+### Static Analysis
+* PHPStan (LaraStan): Analyze code with PHPStan for static analysis:
+```bash
+./vendor/bin/phpstan analyze
+```
+
+* Pint: Static Code Analysis With Laravel Pint
+```bash
+./vendor/bin/pint --preset psr12
+```
+
+## Enjoy

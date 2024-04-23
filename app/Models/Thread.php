@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use App\Filters\ThreadFilters;
+use App\Traits\RecordsActivity;
 use App\Events\ThreadReceivedNewReply;
 use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Thread extends Model
@@ -18,7 +18,7 @@ class Thread extends Model
     /**
      * Don't auto-apply mass assignment protection.
      *
-     * @var array
+     * @var array<string>|bool
      */
     protected $guarded = [];
 
@@ -151,7 +151,7 @@ class Thread extends Model
     public function unsubscribe($userId = null)
     {
         $this->subscriptions()
-            ->where(['user_id' => $user ?? auth()->id()])
+            ->where(['user_id' => $userId ?? auth()->id()])
             ->delete();
     }
 
@@ -168,7 +168,7 @@ class Thread extends Model
     /**
      * Determine if the current user is subscribed to the thread.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSubscribedToAttribute()
     {
@@ -178,7 +178,7 @@ class Thread extends Model
     }
 
     /**
-     * @param array $reply
+     * @param mixed $reply
      */
     public function notifySubscribers($reply): void
     {
@@ -196,9 +196,7 @@ class Thread extends Model
      */
     public function hasUpdatesFor($user)
     {
-        $key = $user->visitedThreadCacheKey($this);
-
-        return $this->updated_at > cache($key);
+        return $this->updated_at > cache()->get($user->visitedThreadCacheKey($this));
     }
 
     /**

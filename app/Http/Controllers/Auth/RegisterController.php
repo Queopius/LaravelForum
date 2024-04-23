@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\PleaseConfirmYourEmail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\{Mail, Validator};
 
 class RegisterController extends Controller
 {

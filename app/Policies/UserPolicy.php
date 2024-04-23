@@ -14,7 +14,7 @@ class UserPolicy
      *
      * @param  \App\Models\User $signedInUser
      * @param  \App\Models\User $user
-     * @return boolean
+     * @return bool
      */
     public function update(User $signedInUser, User $user)
     {

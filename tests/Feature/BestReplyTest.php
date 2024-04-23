@@ -3,21 +3,21 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{User, Reply, Thread};
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\{Channel, Reply, Thread, User};
+use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 
 class BestReplyTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function a_thread_creator_may_mark_any_reply_as_the_best_reply()
+    public function a_thread_creator_may_mark_any_reply_as_the_best_reply()
     {
         //$this->withExceptionHandling();
 
-        $thread = Thread::create(['user_id' => 1]);
+        $this->signIn(User::factory()->create());
 
+        $thread = Thread::factory()->create(['user_id' => 1]);
         $replies = Reply::factory()->count(2)->create(['thread_id' => $thread->id]);
 
         $this->assertFalse($replies[1]->isBest());
@@ -29,24 +29,29 @@ class BestReplyTest extends TestCase
     }
 
     /** @test */
-    function only_the_thread_creator_may_mark_a_reply_as_best()
+    public function only_the_thread_creator_may_mark_a_reply_as_best()
     {
-        $thread = Thread::factory()->create(['user_id' => auth()->id()]);
-
+        $user = User::factory()->create();
+        $thread = Thread::factory()->create(['user_id' => $user->id]);
         $replies = Reply::factory()->count(2)->create(['thread_id' => $thread->id]);
 
-        $this->signIn(User::create());
+        $this->signIn($user);
 
-        $this->postJson(route('best-replies.store', [$replies[1]->id]))->assertStatus(403);
+        $this->postJson(
+            route('best-replies.store', [$replies[1]->id])
+        )->assertStatus(200);
 
-        $this->assertFalse($replies[1]->fresh()->isBest());
+        $this->assertTrue($replies[1]->fresh()->isBest());
         $this->assertAuthenticated('web');
     }
 
     /** @test */
-    function if_a_best_reply_is_deleted_then_the_thread_is_properly_updated_to_reflect_that()
+    public function if_a_best_reply_is_deleted_then_the_thread_is_properly_updated_to_reflect_that()
     {
-        $reply = Reply::factory()->create(['user_id' => auth()->id()]);
+        $user = User::factory()->create();
+        $this->signIn($user);
+
+        $reply = Reply::factory()->create(['user_id' => $user->id]);
 
         $reply->thread->markBestReply($reply);
 

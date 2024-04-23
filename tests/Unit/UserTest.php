@@ -1,16 +1,16 @@
 <?php
- 
+
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Models\{User, Reply};
+use App\Models\{Reply, User};
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function a_user_can_fetch_their_most_recent_reply()
     {
@@ -24,10 +24,10 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    function a_user_can_determine_their_avatar_path()
+    public function a_user_can_determine_their_avatar_path()
     {
         $this->withoutExceptionHandling();
-        
+
         $user = User::factory()->create();
 
         $this->assertEquals(asset(Storage::url('avatars/default.png')), $user->avatar_path);

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Redis;
-
 /**
  * Class Visits
  * counts thread visits in redis database.
@@ -27,7 +25,7 @@ class Visits
     }
 
     public function record() {
-        Redis::incr($this->getChacheKey());
+        app()->make('redis')->incr($this->getChacheKey());
     }
 
     /**
@@ -35,7 +33,7 @@ class Visits
      */
     public function count()
     {
-        return Redis::get($this->getChacheKey()) ?? 0;
+        return app()->make('redis')->get($this->getChacheKey()) ?? 0;
     }
 
     /**
@@ -48,6 +46,6 @@ class Visits
 
     public function reset()
     {
-        Redis::del($this->getChacheKey());
+        app()->make('redis')->del($this->getChacheKey());
     }
 }

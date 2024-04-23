@@ -1,0 +1,18 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 4
+
+    paths:
+        - app
+        - tests
+
+    excludePaths:
+        - ./*/*/FileToBeExcluded.php
+        - tests/*
+        - ./*/*/UserNotificationsController.php
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false

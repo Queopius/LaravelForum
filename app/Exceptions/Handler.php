@@ -4,25 +4,22 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-// use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
     /**
      * A list of the exception types that should not be reported.
      *
-     * @var array
+     * @var array<string>
      */
-    protected $dontReport = [
-        //
-    ];
+    protected $dontReport = [];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
-     * @var array
+     * @var array<string>
      */
     protected $dontFlash = [
         'password',
@@ -46,44 +43,21 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param  \Exception                $exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Throwable $exception)
     {
-        // dd($exception);
         if ($exception instanceof ValidationException) {
             if ($request->expectsJson()) {
                 return response('Sorry, validation failed.', 422);
             }
         }
-        
+
         if ($exception instanceof ThrottleException) {
             return response($exception->getMessage(), 429);
         }
-        
-        // if ($this->isHttpException($exception)) {
-        //     if (request()->expectsJson()) {
-        //         switch ($exception->getStatusCode()) {
-        //             case 404:
-        //                 return response()->json(['message' => 'Invalid request or url.'], 404);
-        //                 break;
-        //             case '500':
-        //                 return response()->json(['message' => 'Server error. Please contact admin.'], 500);
-        //                 break;
-
-        //             default:
-        //                 return $this->renderHttpException($exception);
-        //                 break;
-        //         }
-        //     }
-        // } else if ($exception instanceof ModelNotFoundException) {
-        //     if (request()->expectsJson()) {
-        //         return response()->json(['message' =>$exception->getMessage()], 404);
-        //     }
-        // } {
-        //     return parent::render($request, $exception);
-        // }
 
         return parent::render($request, $exception);
     }
@@ -93,7 +67,8 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {

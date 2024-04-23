@@ -4,22 +4,20 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class YouWereMentioned extends Notification
 {
     use Queueable;
 
     /**
-     * @var \App\Reply
+     * @var \App\Models\Reply
      */
     protected $reply;
 
     /**
      * Create a new notification instance.
      *
-     * @param \App\Reply $reply
+     * @param \App\Models\Reply $reply
      */
     public function __construct($reply)
     {

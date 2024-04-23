@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{User, Reply, Thread};
+use App\Models\{Reply, Thread, User};
 
 class MentionUsersTest extends TestCase
 {
     /** @test */
-    function mentioned_users_in_a_reply_are_notified()
+    public function mentioned_users_in_a_reply_are_notified()
     {
         $this->withoutExceptionHandling();
         $john = $this->createUser(['name' => 'JohnDoe']);
@@ -29,7 +29,7 @@ class MentionUsersTest extends TestCase
     }
 
     /** @test */
-    function it_can_fetch_all_mentioned_users_starting_with_the_given_characters()
+    public function it_can_fetch_all_mentioned_users_starting_with_the_given_characters()
     {
         $this->createUser(['name' => 'JohnDoe']);
         $this->createUser(['name' => 'johndoe2']);

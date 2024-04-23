@@ -11,7 +11,7 @@ class SubscribeToThreadsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_user_can_subscribe_to_threads()
+    public function a_user_can_subscribe_to_threads()
     {
         $this->signIn();
 
@@ -25,7 +25,7 @@ class SubscribeToThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_user_can_unsubscribe_from_threads()
+    public function a_user_can_unsubscribe_from_threads()
     {
         $this->signIn();
 

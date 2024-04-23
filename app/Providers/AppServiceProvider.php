@@ -3,13 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Channel;
-use Laravel\Scout\EngineManager;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Validator;
+use App\Repositories\EloquentReplyRepository;
+use App\Repositories\Interface\ReplyRepositoryInterface;
+use Illuminate\Support\Facades\{Blade, Cache, Validator, View};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,10 +31,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::withoutDoubleEncoding();
         Paginator::useBootstrap();
         //Paginator::useBootstrapThree();
-
-        resolve(EngineManager::class)->extend('mysql', function () {
-        return new MySqlSearchEngine;
-    });
     }
 
     /**
@@ -46,8 +40,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->app->isLocal()) {
+        if (app()->isLocal()) {
             $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
         }
+
+        $this->app->bind(ReplyRepositoryInterface::class, EloquentReplyRepository::class);
     }
 }

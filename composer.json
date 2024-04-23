@@ -1,6 +1,12 @@
 {
-    "name": "queopius/laraforum",
+    "name": "queopius/forum",
     "description": "Forum for works.",
+    "authors": [
+        {
+            "name": "Queopius A.S.",
+            "email": "dev.queopius@gmail.com"
+        }
+    ],
     "keywords": ["framework", "laravel", "app", "forum", "queopius"],
     "license": "MIT",
     "type": "project",
@@ -10,11 +16,13 @@
         "beyondcode/laravel-dump-server": "^1.7",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "7.*",
+        "http-interop/http-factory-guzzle": "^1.2",
         "laravel/framework": "8.*",
         "laravel/legacy-factories": "^1.1",
         "laravel/scout": "^9.3",
         "laravel/tinker": "^2.5",
         "laravel/ui": "3.*",
+        "meilisearch/meilisearch-php": "^1.7",
         "nunomaduro/collision": "5.*",
         "predis/predis": "^1.1",
         "psr/log": "^1.0",
@@ -24,8 +32,11 @@
         "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "2.*",
         "fakerphp/faker": "1.*",
+        "larastan/larastan": "^1.0",
         "laravel/dusk": "^6.19",
+        "laravel/pint": "^1.5",
         "mockery/mockery": "1.*",
+        "nunomaduro/phpinsights": "^2.10",
         "phpunit/phpunit": "9.*"
     },
     "config": {
@@ -34,6 +45,10 @@
         "optimize-autoloader": true,
         "fxp-asset": {
             "pattern-skip-version": "(-build)"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true
         }
     },
     "extra": {

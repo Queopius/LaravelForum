@@ -3,9 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\{Thread, User};
+use App\Models\{Reply, Thread, User};
 use App\Models\DatabaseNotificationUser;
-use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationsTest extends TestCase
 {
@@ -17,7 +16,7 @@ class NotificationsTest extends TestCase
     }
 
     /** @test */
-    function a_notification_is_prepared_when_a_subscribed_thread_receives_a_new_reply_that_is_not_by_the_current_user()
+    public function a_notification_is_prepared_when_a_subscribed_thread_receives_a_new_reply_that_is_not_by_the_current_user()
     {
         $thread = Thread::factory()->create()->subscribe();
 
@@ -39,15 +38,26 @@ class NotificationsTest extends TestCase
     }
 
     /** @test */
-    function a_user_can_fetch_their_unread_notifications()
+    public function a_user_can_fetch_their_unread_notifications()
     {
-        DatabaseNotificationUser::factory()->create();
+        $this->withoutExceptionHandling();
 
-        $this->assertCount(1, $this->getJson("/profiles/" . auth()->user()->name . "/notifications")->json());
+        $thread = Thread::factory()->create()->subscribe();
+
+        $thread->addReply([
+            'user_id' => User::factory()->create()->id,
+            'body' => 'Some reply'
+        ]);
+
+        $user = auth()->user();
+
+        $response = $this->getJson("/profiles/{$user->name}/notifications")->json();
+
+        $this->assertCount(1, $response);
     }
 
     /** @test */
-    function a_user_can_mark_a_notification_as_read()
+    public function a_user_can_mark_a_notification_as_read()
     {
         DatabaseNotificationUser::factory()->create();
 

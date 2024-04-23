@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\{Hash, Storage};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -17,7 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'name',
@@ -44,12 +43,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'confirmed' => 'boolean',
     ];
 
     public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] = Hash::needsRehash($password) 
-            ? Hash::make($password) 
+        $this->attributes['password'] = Hash::needsRehash($password)
+            ? Hash::make($password)
             : $password;
     }
 
@@ -91,6 +91,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function confirm()
+    {
+        $this->confirmed = true;
+
+        $this->confirmation_token = null;
+
+        $this->save();
     }
 
     /**
@@ -137,5 +146,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function visitedThreadCacheKey($thread)
     {
         return sprintf("users.%s.visits.%s", $this->id, $thread->id);
+    }
+
+    /**
+     * Returns the user's unread notifications.
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
     }
 }
