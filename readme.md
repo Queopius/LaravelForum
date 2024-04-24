@@ -15,6 +15,8 @@
     <a href="https://github.com/Queopius/framework/forum">
         <img src="https://github.com/Queopius/forum/actions/workflows/phpstan.yml/badge.svg" alt="Build Status">
     </a>
+
+  <a href='http://localhost:8080/user/queopius/my-views/view/all/job/Forum/job/dev/'><img src='http://localhost:8080/user/queopius/my-views/view/all/job/Forum/job/dev/badge/icon'></a>
 </p> 
 
 # Forum
