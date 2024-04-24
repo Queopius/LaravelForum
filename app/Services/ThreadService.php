@@ -29,7 +29,7 @@ final class ThreadService
         } catch (\Throwable $th) {
             return redirect()->route('threads.create')
                 ->withErrors([
-                    'thread_creation' => 'Failed to create thread. Please check your inputs and try again.'
+                    'flash' => 'Failed to create thread. Please check your inputs and try again.'
                 ])
                 ->withInput();
         }
