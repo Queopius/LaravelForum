@@ -3,6 +3,7 @@
 /public/hot
 /build/coverage
 /build/logs
+/build/phpunit
 /storage/*.key
 /vendor
 /.idea
