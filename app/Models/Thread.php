@@ -219,7 +219,7 @@ class Thread extends Model
     {
         return Purify::clean($body);
     }
-
+ 
     /**
      * Set the proper slug attribute.
      *
